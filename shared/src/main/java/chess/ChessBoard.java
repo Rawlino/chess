@@ -45,7 +45,7 @@ public class ChessBoard {
                 squares[i][j] = null;
             }
         }
-        //Setting up panws in the next 2 for loops
+        //Setting up pawns in the next 2 for loops
         for (int j = 1; j <= 8; j++) {
             addPiece(new ChessPosition(2, j), new ChessPiece(WHITE, PAWN));
             addPiece(new ChessPosition(7, j), new ChessPiece(BLACK, PAWN));
