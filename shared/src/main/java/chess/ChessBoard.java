@@ -1,5 +1,8 @@
 package chess;
 
+import static chess.ChessPiece.PieceType.*;
+import static chess.ChessGame.TeamColor.*;
+
 /**
  * A chessboard that can hold and rearrange chess pieces.
  * <p>
@@ -9,9 +12,7 @@ package chess;
 public class ChessBoard {
 
     ChessPiece[][] squares = new ChessPiece[8][8];
-    public ChessBoard() {
-        
-    }
+    public ChessBoard() {}
 
     /**
      * Adds a chess piece to the chessboard
@@ -39,6 +40,15 @@ public class ChessBoard {
      * (How the game of chess normally starts)
      */
     public void resetBoard() {
-        throw new RuntimeException("Not implemented");
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                squares[i][j] = null;
+            }
+        }
+        //Setting up panws in the next 2 for loops
+        for (int j = 1; j <= 8; j++) {
+            addPiece(new ChessPosition(2, j), new ChessPiece(WHITE, PAWN));
+            addPiece(new ChessPosition(7, j), new ChessPiece(BLACK, PAWN));
+        }
     }
 }
