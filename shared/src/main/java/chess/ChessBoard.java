@@ -1,5 +1,8 @@
 package chess;
 
+import java.util.Arrays;
+import java.util.Objects;
+
 import static chess.ChessPiece.PieceType.*;
 import static chess.ChessGame.TeamColor.*;
 
@@ -40,15 +43,25 @@ public class ChessBoard {
      * (How the game of chess normally starts)
      */
     public void resetBoard() {
+        //Clear board
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 squares[i][j] = null;
             }
         }
-        //Setting up pawns in the next 2 for loops
+        //Setting up pawns
         for (int j = 1; j <= 8; j++) {
             addPiece(new ChessPosition(2, j), new ChessPiece(WHITE, PAWN));
             addPiece(new ChessPosition(7, j), new ChessPiece(BLACK, PAWN));
         }
+
+        //Special pieces order
+        ChessPiece.PieceType[] pieces = {ROOK, KNIGHT, BISHOP, QUEEN, KING, BISHOP, KNIGHT, ROOK};
+        //Place special pieces
+        for (int j = 1; j <= 8; j++) {
+            addPiece(new ChessPosition(1, j), new ChessPiece(WHITE, pieces[j-1]));
+            addPiece(new ChessPosition(8, j), new ChessPiece(BLACK, pieces[j-1]));
+        }
     }
+
 }
