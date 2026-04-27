@@ -70,7 +70,7 @@ public class ChessPiece {
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
         ChessPiece piece = board.getPiece(myPosition);
-        //Why is this passing??? TODO LOOK INTO THIS
+        //Why is this passing??? TODO LOOK INTO THIS!
         if (piece.getPieceType() == PieceType.KING) {
             return List.of(new ChessMove( new ChessPosition(myPosition.getRow()+1, myPosition.getColumn()+1), new ChessPosition(1,8), null));
         } else if (piece.getPieceType() == PieceType.QUEEN) {
