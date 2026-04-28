@@ -82,7 +82,8 @@ public class ChessPiece {
         ArrayList<ChessMove> moves = new ArrayList<>();
 
         if (piece.getPieceType() == PieceType.KING) {
-            return List.of(new ChessMove(new ChessPosition(myPosition.getRow() + 1, myPosition.getColumn() + 1), new ChessPosition(1, 8), null));
+            int[][] kingMoves = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}, {1, 1}, {1, -1}, {-1, 1}, {-1, -1}};
+            return moves;
         } else if (piece.getPieceType() == PieceType.QUEEN) {
             int up = 1;
             int down = -1;
@@ -324,7 +325,8 @@ public class ChessPiece {
             }
             return moves;
         } else if (piece.getPieceType() == PieceType.KNIGHT) {
-            return List.of(new ChessMove(new ChessPosition(5, 4), new ChessPosition(1, 8), null));
+            int[][] knightMoves = {{2, -1}, {2, 1}, {1, 2}, {1, -2}, {-1, -2}, {-1, 2}, {-2, -1}, {-2, 1}};
+            return moves;
         } else if (piece.getPieceType() == PieceType.ROOK) {
             int up = 1;
             int down = -1;
