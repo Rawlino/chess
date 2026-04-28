@@ -326,6 +326,20 @@ public class ChessPiece {
             return moves;
         } else if (piece.getPieceType() == PieceType.KNIGHT) {
             int[][] knightMoves = {{2, -1}, {2, 1}, {1, 2}, {1, -2}, {-1, -2}, {-1, 2}, {-2, -1}, {-2, 1}};
+            for (int i = 0; i < 8; i++) {
+                if (!isInBounds(myPosition.getRow() + knightMoves[i][0], myPosition.getColumn() + knightMoves[i][1])) {
+                } else {
+                    if (board.getPiece(new ChessPosition(myPosition.getRow() + knightMoves[i][0], myPosition.getColumn() + knightMoves[i][1])) != null) {
+                        if ((board.getPiece(new ChessPosition(myPosition.getRow() + knightMoves[i][0], myPosition.getColumn() + knightMoves[i][1])).getTeamColor() == piece.getTeamColor())) {
+                            //pass
+                        } else {
+                            moves.add(new ChessMove(new ChessPosition(myPosition.getRow(), myPosition.getColumn()), new ChessPosition(myPosition.getRow() + knightMoves[i][0], myPosition.getColumn() + knightMoves[i][1]), null));
+                        }
+                    } else {
+                        moves.add(new ChessMove(new ChessPosition(myPosition.getRow(), myPosition.getColumn()), new ChessPosition(myPosition.getRow() + knightMoves[i][0], myPosition.getColumn() + knightMoves[i][1]), null));
+                    }
+                }
+            }
             return moves;
         } else if (piece.getPieceType() == PieceType.ROOK) {
             int up = 1;
