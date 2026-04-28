@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
+import static chess.ChessGame.TeamColor.*;
 
 /**
  * Represents a single chess piece
@@ -430,7 +431,35 @@ public class ChessPiece {
             }
             return moves;
         } else if (piece.getPieceType() == PieceType.PAWN) {
-            return List.of(new ChessMove(new ChessPosition(5, 4), new ChessPosition(1, 8), null));
+            /*Notes from reading through tests:
+            * We need use cases for both BLACK and WHITE
+            * Promotion piece is only active if the pawn makes it to the end of the board
+            * You'll have to check for enemy pawns when moving forward 2 to avoid going where you physically can't
+            * */
+            int[][] whitePawnMoves = {{1, 0}, {1, 1}, {1, -1}, {2, 0}};
+            int[][] blackPawnMoves = {{-1, 0}, {-1, -1}, {-1, -1}, {-2, 0}};
+            if (piece.getTeamColor() == WHITE) {
+                for (int i = 0; i < 4; i++) {
+                    if (!isInBounds(myPosition.getRow() + whitePawnMoves[i][0], myPosition.getColumn() + whitePawnMoves[i][1])) {
+                    } else if (i == 3 && myPosition.getRow() == 2) {
+                        moves.add(new ChessMove(new ChessPosition(myPosition.getRow(), myPosition.getColumn()), new ChessPosition(myPosition.getRow() + whitePawnMoves[i][0], myPosition.getColumn() + whitePawnMoves[i][1]), null));
+                    } else {
+                        //ANYTHING UNDER HERE IS UNDER CONSTRUCTION
+                        if (board.getPiece(new ChessPosition(myPosition.getRow() + whitePawnMoves[i][0], myPosition.getColumn() + whitePawnMoves[i][1])) != null) {
+                            if ((board.getPiece(new ChessPosition(myPosition.getRow() + whitePawnMoves[i][0], myPosition.getColumn() + whitePawnMoves[i][1])).getTeamColor() == piece.getTeamColor())) {
+                                //pass
+                            } else {
+                                moves.add(new ChessMove(new ChessPosition(myPosition.getRow(), myPosition.getColumn()), new ChessPosition(myPosition.getRow() + whitePawnMoves[i][0], myPosition.getColumn() + whitePawnMoves[i][1]), null));
+                            }
+                        } else {
+                            moves.add(new ChessMove(new ChessPosition(myPosition.getRow(), myPosition.getColumn()), new ChessPosition(myPosition.getRow() + whitePawnMoves[i][0], myPosition.getColumn() + whitePawnMoves[i][1]), null));
+                        }
+                    }
+                }
+            } else {
+
+            }
+            return moves;
         }
         return null;
     }
