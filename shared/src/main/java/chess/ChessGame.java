@@ -3,7 +3,8 @@ package chess;
 import java.util.Collection;
 import java.util.Objects;
 
-import static chess.ChessPiece.PieceType.KING;
+import static chess.ChessPiece.PieceType.*;
+
 
 /**
  * A class that can manage a chess game, making moves on a board
@@ -144,6 +145,23 @@ public class ChessGame {
             }
         }
         return null;
+    }
+
+    private ChessBoard copyBoard(ChessBoard ogBoard) {
+        ChessBoard newBoard = new ChessBoard();
+
+        for (int row = 1; row <= 8; row++) {
+            for (int col = 1; col <= 8; col++) {
+                ChessPiece piece = ogBoard.getPiece(new ChessPosition(row, col));
+                if (piece.getPieceType() == null) {
+                    //pass
+                } else {
+                    newBoard.addPiece(new ChessPosition(row, col), piece);
+                }
+            }
+        }
+
+        return newBoard;
     }
 
 }
