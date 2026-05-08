@@ -112,4 +112,12 @@ public class ChessGame {
     public ChessBoard getBoard() {
         return masterBoard;
     }
+
+    public ChessPosition findKing(TeamColor team) {
+        for (int row = 0; row < 8; row++) {
+            for (int col = 0; col < 8; col++) {
+                //implement check piece logic here (depending on team color search for that piece, and start from one end or the other to make it quicker)
+            }
+        }
+    }
 }
