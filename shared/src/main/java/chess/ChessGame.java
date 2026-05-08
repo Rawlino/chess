@@ -2,6 +2,8 @@ package chess;
 
 import java.util.Collection;
 
+import static chess.ChessPiece.PieceType.KING;
+
 /**
  * A class that can manage a chess game, making moves on a board
  * <p>
@@ -114,10 +116,16 @@ public class ChessGame {
     }
 
     public ChessPosition findKing(TeamColor team) {
-        for (int row = 0; row < 8; row++) {
-            for (int col = 0; col < 8; col++) {
-                //implement check piece logic here (depending on team color search for that piece, and start from one end or the other to make it quicker)
+        for (int row = 1; row <= 8; row++) {
+            for (int col = 1; col <= 8; col++) {
+                if (masterBoard.getPiece(new ChessPosition(row, col)).getPieceType() == KING) {
+                    if (masterBoard.getPiece(new ChessPosition(row, col)).getTeamColor() == team) {
+                        return new ChessPosition(row, col);
+                    }
+                }
             }
         }
+        return null;
     }
+
 }
