@@ -95,16 +95,50 @@ public class ChessGame {
             throw new InvalidMoveException("Not this team's turn");
         } else {
             Collection<ChessMove> legalMoves = validMoves(move.getStartPosition());
-            for (ChessMove legalMove : legalMoves) {
-                if (legalMove.equals(move)) {
-                    masterBoard.addPiece(move.getStartPosition(), null);
-                    if (promotionpiece) {
-
+            if (legalMoves.contains(move)) {
+                masterBoard.addPiece(move.getStartPosition(), null);
+                if (move.getPromotionPiece() != null) {
+                    if (move.getPromotionPiece() == QUEEN) {
+                        masterBoard.addPiece(move.getEndPosition(), new ChessPiece(piece.getTeamColor(), QUEEN));
+                        if (teamTurn == TeamColor.WHITE) {
+                            teamTurn = TeamColor.BLACK;
+                        } else {
+                            teamTurn = TeamColor.WHITE;
+                        }
+                    } else if (move.getPromotionPiece() ==  BISHOP) {
+                        masterBoard.addPiece(move.getEndPosition(), new ChessPiece(piece.getTeamColor(), BISHOP));
+                        if (teamTurn == TeamColor.WHITE) {
+                            teamTurn = TeamColor.BLACK;
+                        } else {
+                            teamTurn = TeamColor.WHITE;
+                        }
+                    } else if (move.getPromotionPiece() ==  KNIGHT) {
+                        masterBoard.addPiece(move.getEndPosition(), new ChessPiece(piece.getTeamColor(), KNIGHT));
+                        if (teamTurn == TeamColor.WHITE) {
+                            teamTurn = TeamColor.BLACK;
+                        } else {
+                            teamTurn = TeamColor.WHITE;
+                        }
                     } else {
-                        masterBoard.addPiece(move.getEndPosition(), piece);
+                        masterBoard.addPiece(move.getEndPosition(), new ChessPiece(piece.getTeamColor(), ROOK));
+                        if (teamTurn == TeamColor.WHITE) {
+                            teamTurn = TeamColor.BLACK;
+                        } else {
+                            teamTurn = TeamColor.WHITE;
+                        }
+                    }
+                } else {
+                    masterBoard.addPiece(move.getEndPosition(), piece);
+                    if (teamTurn == TeamColor.WHITE) {
+                        teamTurn = TeamColor.BLACK;
+                    } else {
+                        teamTurn = TeamColor.WHITE;
                     }
                 }
+            } else {
+                throw new InvalidMoveException("Move is not a legal move");
             }
+
         }
 
     }
