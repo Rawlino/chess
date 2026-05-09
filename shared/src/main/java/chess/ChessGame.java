@@ -150,7 +150,7 @@ public class ChessGame {
      * @return True if the specified team is in check
      */
     public boolean isInCheck(TeamColor teamColor) {
-        ChessPosition kingLocation = findKing(teamColor);
+        ChessPosition kingLocation = findKing(teamColor, masterBoard);
 
         for (int row = 1; row <= 8; row++) {
             for (int col = 1; col <= 8; col++) {
@@ -210,12 +210,12 @@ public class ChessGame {
         return masterBoard;
     }
 
-    private ChessPosition findKing(TeamColor team) {
+    private ChessPosition findKing(TeamColor team, ChessBoard board) {
         for (int row = 1; row <= 8; row++) {
             for (int col = 1; col <= 8; col++) {
-                if (masterBoard.getPiece(new ChessPosition(row, col)) != null) {
-                    if (masterBoard.getPiece(new ChessPosition(row, col)).getPieceType() == KING) {
-                        if (masterBoard.getPiece(new ChessPosition(row, col)).getTeamColor() == team) {
+                if (board.getPiece(new ChessPosition(row, col)) != null) {
+                    if (board.getPiece(new ChessPosition(row, col)).getPieceType() == KING) {
+                        if (board.getPiece(new ChessPosition(row, col)).getTeamColor() == team) {
                             return new ChessPosition(row, col);
                         }
                     }
@@ -251,7 +251,7 @@ public class ChessGame {
      * @param board
      */
     private boolean isInCheck(TeamColor teamColor, ChessBoard board) {
-        ChessPosition kingLocation = findKing(teamColor);
+        ChessPosition kingLocation = findKing(teamColor, board);
 
         for (int row = 1; row <= 8; row++) {
             for (int col = 1; col <= 8; col++) {
