@@ -66,12 +66,11 @@ public class ChessGame {
 
             for (ChessMove move : moves) {
                 ChessBoard copy = copyBoard(masterBoard);
-                ChessPiece copyPiece = copy.getPiece(startPosition);
 
                 copy.addPiece(move.getStartPosition(), null);
                 copy.addPiece(move.getEndPosition(), piece);
 
-                if (isInCheck(copyPiece.getTeamColor())) {
+                if (isInCheck(piece.getTeamColor(), copy)) {
                     //pass
                 } else {
                     legalMoves.add(move);
@@ -241,6 +240,34 @@ public class ChessGame {
         }
 
         return newBoard;
+    }
+
+
+    /**
+     * Couldn't figure out the isInCheck logic for a copy board without changing function signatures which broke tests,
+     * so just created another one that can take copy board into function signature.
+     *
+     * @param teamColor
+     * @param board
+     */
+    private boolean isInCheck(TeamColor teamColor, ChessBoard board) {
+        ChessPosition kingLocation = findKing(teamColor);
+
+        for (int row = 1; row <= 8; row++) {
+            for (int col = 1; col <= 8; col++) {
+                if (board.getPiece(new ChessPosition(row, col)) != null) {
+                    if (board.getPiece(new ChessPosition(row, col)).getTeamColor() != teamColor) {
+                        Collection<ChessMove> moves = board.getPiece(new ChessPosition(row, col)).pieceMoves(board, new ChessPosition(row, col));
+                        for (ChessMove move : moves) {
+                            if (move.getEndPosition().equals(kingLocation)) {
+                                return true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return false;
     }
 
 }
