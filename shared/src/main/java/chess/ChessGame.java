@@ -155,11 +155,13 @@ public class ChessGame {
 
         for (int row = 1; row <= 8; row++) {
             for (int col = 1; col <= 8; col++) {
-                if (masterBoard.getPiece(new ChessPosition(row, col)).getTeamColor() != teamColor) {
-                    Collection<ChessMove> moves = masterBoard.getPiece(new ChessPosition(row, col)).pieceMoves(masterBoard, new ChessPosition(row, col));
-                    for (ChessMove move : moves) {
-                        if (move.getEndPosition().equals(kingLocation)) {
-                            return true;
+                if (masterBoard.getPiece(new ChessPosition(row, col)) != null) {
+                    if (masterBoard.getPiece(new ChessPosition(row, col)).getTeamColor() != teamColor) {
+                        Collection<ChessMove> moves = masterBoard.getPiece(new ChessPosition(row, col)).pieceMoves(masterBoard, new ChessPosition(row, col));
+                        for (ChessMove move : moves) {
+                            if (move.getEndPosition().equals(kingLocation)) {
+                                return true;
+                            }
                         }
                     }
                 }
@@ -212,9 +214,11 @@ public class ChessGame {
     private ChessPosition findKing(TeamColor team) {
         for (int row = 1; row <= 8; row++) {
             for (int col = 1; col <= 8; col++) {
-                if (masterBoard.getPiece(new ChessPosition(row, col)).getPieceType() == KING) {
-                    if (masterBoard.getPiece(new ChessPosition(row, col)).getTeamColor() == team) {
-                        return new ChessPosition(row, col);
+                if (masterBoard.getPiece(new ChessPosition(row, col)) != null) {
+                    if (masterBoard.getPiece(new ChessPosition(row, col)).getPieceType() == KING) {
+                        if (masterBoard.getPiece(new ChessPosition(row, col)).getTeamColor() == team) {
+                            return new ChessPosition(row, col);
+                        }
                     }
                 }
             }
@@ -228,7 +232,7 @@ public class ChessGame {
         for (int row = 1; row <= 8; row++) {
             for (int col = 1; col <= 8; col++) {
                 ChessPiece piece = ogBoard.getPiece(new ChessPosition(row, col));
-                if (piece.getPieceType() == null) {
+                if (piece == null) {
                     //pass
                 } else {
                     newBoard.addPiece(new ChessPosition(row, col), piece);
