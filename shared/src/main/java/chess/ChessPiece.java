@@ -70,6 +70,11 @@ public class ChessPiece {
         return true;
     }
 
+    @Override
+    public String toString() {
+        return String.format("%s, %s", pieceColor, type);
+    }
+
     /**
      * Calculates all the positions a chess piece can move to
      * Does not take into account moves that are illegal due to leaving the king in
