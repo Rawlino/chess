@@ -56,7 +56,6 @@ public class ChessGame {
      * startPosition
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
-        //Testing function now
         ChessPiece piece =  masterBoard.getPiece(startPosition);
         ArrayList<ChessMove> legalMoves = new ArrayList<>();
 
