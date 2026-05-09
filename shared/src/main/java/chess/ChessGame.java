@@ -178,9 +178,21 @@ public class ChessGame {
     public boolean isInCheckmate(TeamColor teamColor) {
         if (!isInCheck(teamColor)) {
             return false;
-        } else {
-
         }
+
+        for (int row = 1; row <= 8; row++) {
+            for (int col = 1; col <= 8; col++) {
+                if (masterBoard.getPiece(new ChessPosition(row, col)) != null) {
+                    if (masterBoard.getPiece(new ChessPosition(row, col)).getTeamColor() == teamColor) {
+                        Collection<ChessMove> moves = validMoves(new ChessPosition(row, col));
+                        if (!moves.isEmpty()) {
+                            return false;
+                        }
+                    }
+                }
+            }
+        }
+
         return true;
     }
 
