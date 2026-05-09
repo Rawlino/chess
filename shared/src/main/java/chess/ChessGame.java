@@ -66,11 +66,12 @@ public class ChessGame {
 
             for (ChessMove move : moves) {
                 ChessBoard copy = copyBoard(masterBoard);
+                ChessPiece copyPiece = copy.getPiece(startPosition);
 
                 copy.addPiece(move.getStartPosition(), null);
                 copy.addPiece(move.getEndPosition(), piece);
 
-                if (isInCheck(piece.getTeamColor())) {
+                if (isInCheck(copyPiece.getTeamColor())) {
                     //pass
                 } else {
                     legalMoves.add(move);
