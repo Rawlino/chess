@@ -1,10 +1,11 @@
 package dataaccess;
 
+import chess.ChessGame;
 import model.GameData;
 
 public interface GameDAO {
 
-    GameData createGame() throws DataAccessException;
+    GameData createGame(String whiteUsername, String blackUsername, String gameName, ChessGame game) throws DataAccessException;
 
     GameData getGame(int gameID) throws DataAccessException;
 
@@ -13,4 +14,5 @@ public interface GameDAO {
     void updateGame(int gameID) throws DataAccessException;
 
     void clear() throws DataAccessException;
+
 }
