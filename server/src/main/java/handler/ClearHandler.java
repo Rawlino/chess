@@ -12,7 +12,7 @@ public class ClearHandler {
         this.clearService = clearService;
     }
 
-    private void clearDB(Context ctx) throws DataAccessException {
+    public void clearDB(Context ctx) throws DataAccessException {
         clearService.clearDB();
         ctx.status(200);
     }

@@ -6,31 +6,31 @@ import model.GameData;
 import java.util.Collection;
 import java.util.HashMap;
 
-public class MemoryGameDAO {
+public class MemoryGameDAO implements GameDAO {
 
     private int nextId = 1;
     final private HashMap<Integer, GameData> games = new HashMap<>();
 
-    int createGame(String whiteUsername, String blackUsername, String gameName, ChessGame game) {
+    public int createGame(String whiteUsername, String blackUsername, String gameName, ChessGame game) {
         GameData newGame = new GameData(nextId++, whiteUsername, blackUsername, gameName, game);
 
         games.put(nextId, newGame);
         return nextId;
     }
 
-    GameData getGame(int gameID) {
+    public GameData getGame(int gameID) {
         return games.get(gameID);
     }
 
-    Collection<GameData> listGames() {
+    public Collection<GameData> listGames() {
         return games.values();
     }
 
-    void updateGame(int gameID, String whiteUsername, String blackUsername, String gameName, ChessGame game) {
+    public void updateGame(int gameID, String whiteUsername, String blackUsername, String gameName, ChessGame game) {
         games.put(gameID, new GameData(gameID, whiteUsername, blackUsername, gameName, game));
     }
 
-    void clear() {
+    public void clear() {
         games.clear();
     }
 
