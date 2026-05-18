@@ -11,11 +11,11 @@ public class MemoryGameDAO {
     private int nextId = 1;
     final private HashMap<Integer, GameData> games = new HashMap<>();
 
-    GameData createGame(String whiteUsername, String blackUsername, String gameName, ChessGame game) {
+    int createGame(String whiteUsername, String blackUsername, String gameName, ChessGame game) {
         GameData newGame = new GameData(nextId++, whiteUsername, blackUsername, gameName, game);
 
         games.put(nextId, newGame);
-        return newGame;
+        return nextId;
     }
 
     GameData getGame(int gameID) {
