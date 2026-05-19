@@ -45,9 +45,9 @@ public class GameService {
             throw new DataAccessException("Error: unauthorized");
         } else if (game == null) {
             throw new DataAccessException("Error: bad response");
-        } else if ((playerColor == "WHITE" && game.whiteUsername() != null) || (playerColor == "BLACK" && game.blackUsername() != null)) {
+        } else if ((playerColor.equals("WHITE") && game.whiteUsername() != null) || (playerColor.equals("BLACK") && game.blackUsername() != null)) {
             throw new DataAccessException("Error: already taken");
-        } else if (playerColor == "WHITE") {
+        } else if (playerColor.equals("WHITE")) {
             gameDAO.updateGame(gameID, auth.username(), game.blackUsername(), game.gameName(), game.game());
             return true;
         } else {
