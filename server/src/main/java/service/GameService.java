@@ -30,7 +30,15 @@ public class GameService {
 
     public int createGame(String authToken, String gameName) throws DataAccessException {
         AuthData auth = authDAO.getAuth(authToken);
-        if (auth == null) {
+        if (authToken == null) {
+            throw new DataAccessException("Error: bad request");
+        } else if (gameName == null) {
+            throw new DataAccessException("Error: bad request");
+        } else if (authToken.isEmpty()) {
+            throw new DataAccessException("Error: bad request");
+        } else if (gameName.isEmpty()) {
+            throw new DataAccessException("Error: bad request");
+        } else if (auth == null) {
             throw new DataAccessException("Error: unauthorized");
         } else {
             ChessGame game = new ChessGame();
@@ -41,7 +49,17 @@ public class GameService {
     public boolean joinGame(String authToken, String playerColor, int gameID) throws DataAccessException {
         AuthData auth = authDAO.getAuth(authToken);
         GameData game = gameDAO.getGame(gameID);
-        if (auth == null) {
+        if (authToken == null) {
+            throw new DataAccessException("Error: bad request");
+        } else if (playerColor == null) {
+            throw new DataAccessException("Error: bad request");
+        } else if (gameID <= 0) {
+            throw new DataAccessException("Error: bad request");
+        } else if (authToken.isEmpty()) {
+            throw new DataAccessException("Error: bad request");
+        } else if (playerColor.isEmpty()) {
+            throw new DataAccessException("Error: bad request");
+        } else if (auth == null) {
             throw new DataAccessException("Error: unauthorized");
         } else if (game == null) {
             throw new DataAccessException("Error: bad request");
