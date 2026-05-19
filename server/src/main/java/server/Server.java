@@ -43,13 +43,13 @@ public class Server {
     }
 
     private void exceptionHandler(DataAccessException ex, Context ctx) {
-        if (ex.toString().contains("unauthorized")) {
+        if (ex.getMessage().contains("unauthorized")) {
             ctx.status(401);
             ctx.result(new Gson().toJson(new ErrorResponse(ex.getMessage())));
-        } else if (ex.toString().contains("bad response")) {
+        } else if (ex.getMessage().contains("bad response")) {
             ctx.status(400);
             ctx.result(new Gson().toJson(new ErrorResponse(ex.getMessage())));
-        } else if (ex.toString().contains("already taken")) {
+        } else if (ex.getMessage().contains("already taken")) {
             ctx.status(403);
             ctx.result(new Gson().toJson(new ErrorResponse(ex.getMessage())));
         }
