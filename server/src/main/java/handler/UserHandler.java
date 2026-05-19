@@ -6,7 +6,6 @@ import dataaccess.DataAccessException;
 import model.AuthData;
 import model.UserData;
 import service.UserService;
-import service.UserService.*;
 
 public class UserHandler {
 

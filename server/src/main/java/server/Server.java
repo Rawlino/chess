@@ -27,7 +27,9 @@ public class Server {
                 .post("/session", this.userHandler::login)
                 .delete("/session", this.userHandler::logout)
                 .delete("/db", this.clearHandler::clearDB)
-                .get("/game", this.gameHandler::l)
+                .get("/game", this.gameHandler::listGames)
+                .post("/game", this.gameHandler::createGame)
+                .put("/game", this.gameHandler::joinGame)
                 .exception(DataAccessException.class, this::exceptionHandler);
 
     }
