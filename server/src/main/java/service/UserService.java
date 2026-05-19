@@ -22,7 +22,15 @@ public class UserService {
     public AuthData register(String username, String password, String email) throws DataAccessException {
         UserData user = userDAO.getUser(username);
         String authToken = UUID.randomUUID().toString();
-        if (user != null) {
+        if (username == null) {
+            throw new DataAccessException("Error: bad request");
+        } else if (password == null) {
+            throw new DataAccessException("Error: bad request");
+        } else if (username.isEmpty()) {
+            throw new DataAccessException("Error: bad request");
+        } else if (password.isEmpty()) {
+            throw new DataAccessException("Error: bad request");
+        } else if (user != null) {
             throw new DataAccessException("Error 403: username already taken");
         } else {
             userDAO.createUser(username, password, email);
