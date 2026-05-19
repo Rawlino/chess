@@ -8,7 +8,7 @@ public class ClearHandler {
 
     private final ClearService clearService;
 
-    ClearHandler(ClearService clearService) {
+    public ClearHandler(ClearService clearService) {
         this.clearService = clearService;
     }
 
