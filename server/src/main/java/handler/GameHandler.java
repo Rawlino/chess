@@ -34,8 +34,15 @@ public class GameHandler {
 
     public void joinGame(Context ctx) throws DataAccessException {
         JsonObject obj = JsonParser.parseString(ctx.body()).getAsJsonObject();
-        gameService.joinGame(ctx.header("Authorization"), obj.get("playerColor").getAsString(), obj.get("gameID").getAsInt());
-        ctx.result("{}");
+        if (obj.get("playerColor") == null) {
+            throw new DataAccessException("Error: bad request");
+        } else if (obj.get("gameID") == null) {
+            throw new DataAccessException("Error: bad request");
+        } else {
+            gameService.joinGame(ctx.header("Authorization"), obj.get("playerColor").getAsString(), obj.get("gameID").getAsInt());
+            ctx.result("{}");
+        }
+
     }
 
 }
