@@ -27,10 +27,10 @@ public class Server {
                 .post("/user", this.userHandler::register)
                 .post("/session", this.userHandler::login)
                 .delete("/session", this.userHandler::logout)
-                .delete("/db", this.clearHandler::clearDB)
                 .get("/game", this.gameHandler::listGames)
                 .post("/game", this.gameHandler::createGame)
                 .put("/game", this.gameHandler::joinGame)
+                .delete("/db", this.clearHandler::clearDB)
                 .exception(DataAccessException.class, this::exceptionHandler);
 
     }
@@ -38,15 +38,17 @@ public class Server {
     private void exceptionHandler(DataAccessException ex, Context ctx) {
         if (ex.toString().contains("unauthorized")) {
             ctx.status(401);
-            ctx.result(new Gson().toJson(userHandler));
+            ctx.result(new Gson().toJson(new ErrorResponse(ex.getMessage())));
         } else if (ex.toString().contains("bad response")) {
             ctx.status(400);
-            ctx.result(new Gson().toJson(gameHandler));
+            ctx.result(new Gson().toJson(new ErrorResponse(ex.getMessage())));
         } else if (ex.toString().contains("already taken")) {
             ctx.status(403);
-            ctx.result(new Gson().toJson(gameHandler));
+            ctx.result(new Gson().toJson(new ErrorResponse(ex.getMessage())));
         }
     }
+
+    private record ErrorResponse(String message) {}
 
     public int run(int desiredPort) {
         javalin.start(desiredPort);

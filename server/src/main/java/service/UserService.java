@@ -34,9 +34,9 @@ public class UserService {
         UserData user = userDAO.getUser(username);
         String authToken = UUID.randomUUID().toString();
         if (user == null) {
-            throw new DataAccessException("unauthorized");
+            throw new DataAccessException("Error: unauthorized");
         } else if (user.password().equals(password)) {
-            throw new DataAccessException("unauthorized");
+            throw new DataAccessException("Error: unauthorized");
         } else {
             return authDAO.createAuth(authToken, username);
         }
@@ -45,7 +45,7 @@ public class UserService {
     public boolean logout(String authToken) throws DataAccessException {
         AuthData auth = authDAO.getAuth(authToken);
         if (auth == null) {
-            throw new DataAccessException("unauthroized");
+            throw new DataAccessException("Error: unauthroized");
         } else {
             authDAO.deleteAuth(authToken);
             return true;
