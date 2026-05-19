@@ -31,6 +31,7 @@ public class UserHandler {
         AuthData auth = new Gson().fromJson(ctx.body(), AuthData.class);
         if (userService.logout(auth.authToken())) {
             ctx.status(200);
+            ctx.result(new Gson().toJson(userService));
         }
     }
 

@@ -1,5 +1,6 @@
 package server;
 
+import com.google.gson.Gson;
 import io.javalin.*;
 import model.*;
 import handler.*;
@@ -37,10 +38,13 @@ public class Server {
     private void exceptionHandler(DataAccessException ex, Context ctx) {
         if (ex.toString().contains("unauthorized")) {
             ctx.status(401);
+            ctx.result(new Gson().toJson(userHandler));
         } else if (ex.toString().contains("bad response")) {
             ctx.status(400);
+            ctx.result(new Gson().toJson(gameHandler));
         } else if (ex.toString().contains("already taken")) {
             ctx.status(403);
+            ctx.result(new Gson().toJson(gameHandler));
         }
     }
 
