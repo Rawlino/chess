@@ -15,12 +15,19 @@ public class Server {
     private final ClearHandler clearHandler;
     private final UserHandler userHandler;
     private final GameHandler gameHandler;
+    private final MemoryAuthDAO sharedAuthDAO;
+    private final MemoryGameDAO sharedGameDAO;
+    private final MemoryUserDAO sharedUserDAO;
 
     public Server() {
 
-        clearHandler = new ClearHandler(new ClearService(new MemoryUserDAO(), new MemoryGameDAO(), new MemoryAuthDAO()));
-        userHandler = new UserHandler(new UserService(new MemoryAuthDAO(), new MemoryUserDAO()));
-        gameHandler = new GameHandler(new GameService(new MemoryGameDAO(), new MemoryAuthDAO()));
+        sharedAuthDAO = new MemoryAuthDAO();
+        sharedGameDAO = new MemoryGameDAO();
+        sharedUserDAO = new MemoryUserDAO();
+
+        clearHandler = new ClearHandler(new ClearService(sharedUserDAO, sharedGameDAO, sharedAuthDAO));
+        userHandler = new UserHandler(new UserService(sharedAuthDAO, sharedUserDAO));
+        gameHandler = new GameHandler(new GameService(sharedGameDAO, sharedAuthDAO));
 
         javalin = Javalin.create(config -> config.staticFiles.add("web"))
         // Register your endpoints and exception handlers here.
