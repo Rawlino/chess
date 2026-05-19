@@ -35,7 +35,7 @@ public class UserService {
         String authToken = UUID.randomUUID().toString();
         if (user == null) {
             throw new DataAccessException("Error: unauthorized");
-        } else if (user.password().equals(password)) {
+        } else if (!user.password().equals(password)) {
             throw new DataAccessException("Error: unauthorized");
         } else {
             return authDAO.createAuth(authToken, username);
