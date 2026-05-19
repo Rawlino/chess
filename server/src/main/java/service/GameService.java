@@ -50,9 +50,11 @@ public class GameService {
         } else if (playerColor.equals("WHITE")) {
             gameDAO.updateGame(gameID, auth.username(), game.blackUsername(), game.gameName(), game.game());
             return true;
-        } else {
+        } else if (playerColor.equals("BLACK")) {
             gameDAO.updateGame(gameID, game.whiteUsername(), auth.username(), game.gameName(), game.game());
             return true;
+        } else {
+            throw new DataAccessException("Error: bad response");
         }
     }
 
