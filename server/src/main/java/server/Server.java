@@ -46,7 +46,7 @@ public class Server {
         if (ex.getMessage().contains("unauthorized")) {
             ctx.status(401);
             ctx.result(new Gson().toJson(new ErrorResponse(ex.getMessage())));
-        } else if (ex.getMessage().contains("bad response")) {
+        } else if (ex.getMessage().contains("bad request")) {
             ctx.status(400);
             ctx.result(new Gson().toJson(new ErrorResponse(ex.getMessage())));
         } else if (ex.getMessage().contains("already taken")) {

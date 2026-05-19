@@ -33,7 +33,15 @@ public class UserService {
     public AuthData login(String username, String password) throws DataAccessException {
         UserData user = userDAO.getUser(username);
         String authToken = UUID.randomUUID().toString();
-        if (user == null) {
+        if (username == null) {
+            throw new DataAccessException("Error: bad request");
+        } else if (password == null) {
+            throw new DataAccessException("Error: bad request");
+        } else if (username.isEmpty()) {
+            throw new DataAccessException("Error: bad request");
+        } else if (password.isEmpty()) {
+            throw new DataAccessException("Error: bad request");
+        } else if (user == null) {
             throw new DataAccessException("Error: unauthorized");
         } else if (!user.password().equals(password)) {
             throw new DataAccessException("Error: unauthorized");

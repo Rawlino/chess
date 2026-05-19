@@ -44,7 +44,7 @@ public class GameService {
         if (auth == null) {
             throw new DataAccessException("Error: unauthorized");
         } else if (game == null) {
-            throw new DataAccessException("Error: bad response");
+            throw new DataAccessException("Error: bad request");
         } else if ((playerColor.equals("WHITE") && game.whiteUsername() != null) || (playerColor.equals("BLACK") && game.blackUsername() != null)) {
             throw new DataAccessException("Error: already taken");
         } else if (playerColor.equals("WHITE")) {
@@ -54,7 +54,7 @@ public class GameService {
             gameDAO.updateGame(gameID, game.whiteUsername(), auth.username(), game.gameName(), game.game());
             return true;
         } else {
-            throw new DataAccessException("Error: bad response");
+            throw new DataAccessException("Error: bad request");
         }
     }
 
