@@ -15,8 +15,7 @@ public class ClearHandler {
 
     public void clearDB(Context ctx) throws DataAccessException {
         clearService.clearDB();
-        ctx.status(200);
-        ctx.result(new Gson().toJson(clearService));
+        ctx.result("{}");
     }
 
 }

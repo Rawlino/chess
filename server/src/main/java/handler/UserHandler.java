@@ -17,21 +17,20 @@ public class UserHandler {
 
     public void register(Context ctx) throws DataAccessException {
         UserData user = new Gson().fromJson(ctx.body(), UserData.class);
-        userService.register(user.username(), user.password(), user.email());
-        ctx.result(new Gson().toJson(userService));
+        AuthData auth = userService.register(user.username(), user.password(), user.email());
+        ctx.result(new Gson().toJson(auth));
     }
 
     public void login(Context ctx) throws DataAccessException {
         UserData user = new Gson().fromJson(ctx.body(), UserData.class);
-        userService.login(user.username(), user.password());
-        ctx.result(new Gson().toJson(userService));
+        AuthData auth = userService.login(user.username(), user.password());
+        ctx.result(new Gson().toJson(auth));
     }
 
     public void logout(Context ctx) throws DataAccessException {
-        AuthData auth = new Gson().fromJson(ctx.body(), AuthData.class);
-        if (userService.logout(auth.authToken())) {
-            ctx.status(200);
-            ctx.result(new Gson().toJson(userService));
+        boolean authExist = userService.logout(ctx.header("Authorization"));
+        if (authExist) {
+            ctx.result("{}");
         }
     }
 
