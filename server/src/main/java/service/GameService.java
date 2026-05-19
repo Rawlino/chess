@@ -22,7 +22,7 @@ public class GameService {
     public Collection<GameData> listGames(String authToken) throws DataAccessException {
         AuthData auth = authDAO.getAuth(authToken);
         if (auth == null) {
-            throw new DataAccessException("Error 401: unauthroized");
+            throw new DataAccessException("unauthroized");
         } else {
             return gameDAO.listGames();
         }
@@ -31,7 +31,7 @@ public class GameService {
     public int createGame(String authToken, String gameName) throws DataAccessException {
         AuthData auth = authDAO.getAuth(authToken);
         if (auth == null) {
-            throw new DataAccessException("Error 401: unauthroized");
+            throw new DataAccessException("unauthroized");
         } else {
             ChessGame game = new ChessGame();
             return gameDAO.createGame(null, null, gameName, game);
@@ -42,11 +42,11 @@ public class GameService {
         AuthData auth = authDAO.getAuth(authToken);
         GameData game = gameDAO.getGame(gameID);
         if (auth == null) {
-            throw new DataAccessException("Error 401: unauthroized");
+            throw new DataAccessException("unauthroized");
         } else if (game == null) {
-            throw new DataAccessException("Error 400: bad response");
+            throw new DataAccessException("bad response");
         } else if ((playerColor == "WHITE" && game.whiteUsername() != null) || (playerColor == "BLACK" && game.blackUsername() != null)) {
-            throw new DataAccessException("Error 403: already taken");
+            throw new DataAccessException("already taken");
         } else if (playerColor == "WHITE") {
             gameDAO.updateGame(gameID, auth.username(), game.blackUsername(), game.gameName(), game.game());
             return true;
