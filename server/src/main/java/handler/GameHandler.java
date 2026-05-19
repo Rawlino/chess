@@ -17,7 +17,7 @@ public class GameHandler {
 
     public void listGames(Context ctx) throws DataAccessException {
         AuthData auth = new Gson().fromJson(ctx.body(), AuthData.class);
-        gameService.listGames(auth.authToken());
+        gameService.listGames(ctx.header("Authorization"));
     }
 
     public void createGame(Context ctx) throws DataAccessException {
