@@ -7,14 +7,26 @@ import static org.junit.jupiter.api.Assertions.*;
 class UserServiceTest {
 
     @Test
-    void register() {
+    void registerPositive() {
     }
 
     @Test
-    void login() {
+    void registerNegative() {
     }
 
     @Test
-    void logout() {
+    void loginPositive() {
+    }
+
+    @Test
+    void loginNegative() {
+    }
+
+    @Test
+    void logoutPositive() {
+    }
+
+    @Test
+    void logoutNegative() {
     }
 }

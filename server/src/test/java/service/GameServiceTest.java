@@ -7,14 +7,26 @@ import static org.junit.jupiter.api.Assertions.*;
 class GameServiceTest {
 
     @Test
-    void listGames() {
+    void listGamesPositive() {
     }
 
     @Test
-    void createGame() {
+    void listGamesNegative() {
     }
 
     @Test
-    void joinGame() {
+    void createGamePositive() {
+    }
+
+    @Test
+    void createGameNegative() {
+    }
+
+    @Test
+    void joinGamePositive() {
+    }
+
+    @Test
+    void joinGameNegative() {
     }
 }
