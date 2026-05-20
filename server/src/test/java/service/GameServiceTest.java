@@ -1,32 +1,62 @@
 package service;
 
+import dataaccess.*;
+import model.AuthData;
+import model.GameData;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.Collection;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class GameServiceTest {
 
-    @Test
-    void listGamesPositive() {
+    private MemoryGameDAO memoryGameDAO;
+    private MemoryAuthDAO memoryAuthDAO;
+    private MemoryUserDAO memoryUserDAO;
+    private GameService gameService;
+    private UserService userService;
+
+    @BeforeEach
+    void setup() throws DataAccessException {
+        memoryGameDAO = new MemoryGameDAO();
+        memoryAuthDAO = new MemoryAuthDAO();
+        memoryUserDAO = new MemoryUserDAO();
+        gameService = new GameService(memoryGameDAO, memoryAuthDAO);
+        userService = new UserService(memoryAuthDAO, memoryUserDAO);
+
+        userService.register("butt", "butt", "butt@mail");
     }
 
     @Test
-    void listGamesNegative() {
+    void listGamesPositive() throws DataAccessException {
+        AuthData auth = userService.login("butt", "butt");
+
+        gameService.createGame(auth.authToken(), "Test");
+
+        Collection<GameData> list = gameService.listGames(auth.authToken());
+
+        assertNotNull(list);
     }
 
     @Test
-    void createGamePositive() {
+    void listGamesNegative() throws DataAccessException {
     }
 
     @Test
-    void createGameNegative() {
+    void createGamePositive() throws DataAccessException {
     }
 
     @Test
-    void joinGamePositive() {
+    void createGameNegative() throws DataAccessException {
     }
 
     @Test
-    void joinGameNegative() {
+    void joinGamePositive() throws DataAccessException {
+    }
+
+    @Test
+    void joinGameNegative() throws DataAccessException {
     }
 }
