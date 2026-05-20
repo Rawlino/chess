@@ -182,16 +182,24 @@ public class ChessGame {
         return false;
     }
 
+    public int validMoveHelper(TeamColor teamColor, int row, int col) {
+        if (masterBoard.getPiece(new ChessPosition(row, col)) != null) {
+            if (masterBoard.getPiece(new ChessPosition(row, col)).getTeamColor() == teamColor) {
+                Collection<ChessMove> moves = validMoves(new ChessPosition(row, col));
+                if (!moves.isEmpty()) {
+                    return 1;
+                }
+            }
+        }
+        return 0;
+    }
+
     public boolean validMoveChecker(TeamColor teamColor) {
         for (int row = 1; row <= 8; row++) {
             for (int col = 1; col <= 8; col++) {
-                if (masterBoard.getPiece(new ChessPosition(row, col)) != null) {
-                    if (masterBoard.getPiece(new ChessPosition(row, col)).getTeamColor() == teamColor) {
-                        Collection<ChessMove> moves = validMoves(new ChessPosition(row, col));
-                        if (!moves.isEmpty()) {
-                            return false;
-                        }
-                    }
+                int checker = validMoveHelper(teamColor, row, col);
+                if (checker == 1) {
+                    return false;
                 }
             }
         }
@@ -245,15 +253,23 @@ public class ChessGame {
         return masterBoard;
     }
 
-    private ChessPosition findKing(TeamColor team, ChessBoard board) {
+    public int findKingHelper(ChessBoard board, TeamColor teamColor, int row, int col) {
+        if (board.getPiece(new ChessPosition(row, col)) != null) {
+            if (board.getPiece(new ChessPosition(row, col)).getPieceType() == KING) {
+                if (board.getPiece(new ChessPosition(row, col)).getTeamColor() == teamColor) {
+                    return 1;
+                }
+            }
+        }
+        return 0;
+    }
+
+    private ChessPosition findKing(TeamColor teamColor, ChessBoard board) {
         for (int row = 1; row <= 8; row++) {
             for (int col = 1; col <= 8; col++) {
-                if (board.getPiece(new ChessPosition(row, col)) != null) {
-                    if (board.getPiece(new ChessPosition(row, col)).getPieceType() == KING) {
-                        if (board.getPiece(new ChessPosition(row, col)).getTeamColor() == team) {
-                            return new ChessPosition(row, col);
-                        }
-                    }
+                int checker = findKingHelper(board, teamColor, row, col);
+                if (checker == 1) {
+                    return new ChessPosition(row, col);
                 }
             }
         }
@@ -277,6 +293,19 @@ public class ChessGame {
         return newBoard;
     }
 
+    public int isInCheckHelper(ChessBoard board, TeamColor teamColor, ChessPosition kingLocation, int row, int col) {
+        if (board.getPiece(new ChessPosition(row, col)) != null) {
+            if (board.getPiece(new ChessPosition(row, col)).getTeamColor() != teamColor) {
+                Collection<ChessMove> moves = board.getPiece(new ChessPosition(row, col)).pieceMoves(board, new ChessPosition(row, col));
+                for (ChessMove move : moves) {
+                    if (move.getEndPosition().equals(kingLocation)) {
+                        return 1;
+                    }
+                }
+            }
+        }
+        return 0;
+    }
 
     /**
      * Couldn't figure out the isInCheck logic for a copy board without changing function signatures which broke tests,
@@ -290,15 +319,9 @@ public class ChessGame {
 
         for (int row = 1; row <= 8; row++) {
             for (int col = 1; col <= 8; col++) {
-                if (board.getPiece(new ChessPosition(row, col)) != null) {
-                    if (board.getPiece(new ChessPosition(row, col)).getTeamColor() != teamColor) {
-                        Collection<ChessMove> moves = board.getPiece(new ChessPosition(row, col)).pieceMoves(board, new ChessPosition(row, col));
-                        for (ChessMove move : moves) {
-                            if (move.getEndPosition().equals(kingLocation)) {
-                                return true;
-                            }
-                        }
-                    }
+                int checker = isInCheckHelper(board, teamColor, kingLocation, row, col);
+                if (checker == 1) {
+                    return true;
                 }
             }
         }
