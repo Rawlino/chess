@@ -42,6 +42,7 @@ class GameServiceTest {
 
     @Test
     void listGamesNegative() throws DataAccessException {
+        assertThrows(DataAccessException.class, () -> gameService.listGames("fakeauth"));
     }
 
     @Test
@@ -55,6 +56,7 @@ class GameServiceTest {
 
     @Test
     void createGameNegative() throws DataAccessException {
+        assertThrows(DataAccessException.class, () -> gameService.createGame(null, "Test"));
     }
 
     @Test
@@ -70,5 +72,14 @@ class GameServiceTest {
 
     @Test
     void joinGameNegative() throws DataAccessException {
+        AuthData auth = userService.login("butt", "butt");
+
+        int ID = gameService.createGame(auth.authToken(), "Test");
+
+        gameService.joinGame(auth.authToken(), "WHITE", ID);
+
+        AuthData twinAuth = userService.register("buttEvilTwin", "butt", "buttTwin@mail");
+
+        assertThrows(DataAccessException.class, () -> gameService.joinGame(twinAuth.authToken(), "WHITE", ID));
     }
 }
