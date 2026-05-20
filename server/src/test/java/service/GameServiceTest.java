@@ -63,9 +63,9 @@ class GameServiceTest {
     void joinGamePositive() throws DataAccessException {
         AuthData auth = userService.login("butt", "butt");
 
-        int ID = gameService.createGame(auth.authToken(), "Test");
+        int id = gameService.createGame(auth.authToken(), "Test");
 
-        boolean result = gameService.joinGame(auth.authToken(), "WHITE", ID);
+        boolean result = gameService.joinGame(auth.authToken(), "WHITE", id);
 
         assertTrue(result);
     }
@@ -74,12 +74,12 @@ class GameServiceTest {
     void joinGameNegative() throws DataAccessException {
         AuthData auth = userService.login("butt", "butt");
 
-        int ID = gameService.createGame(auth.authToken(), "Test");
+        int id = gameService.createGame(auth.authToken(), "Test");
 
-        gameService.joinGame(auth.authToken(), "WHITE", ID);
+        gameService.joinGame(auth.authToken(), "WHITE", id);
 
         AuthData twinAuth = userService.register("buttEvilTwin", "butt", "buttTwin@mail");
 
-        assertThrows(DataAccessException.class, () -> gameService.joinGame(twinAuth.authToken(), "WHITE", ID));
+        assertThrows(DataAccessException.class, () -> gameService.joinGame(twinAuth.authToken(), "WHITE", id));
     }
 }
