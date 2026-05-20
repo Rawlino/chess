@@ -147,6 +147,21 @@ public class ChessGame {
 
     }
 
+    public int isInCheckHelper(ChessPosition kingLocation, TeamColor teamColor, int row, int col) {
+        if (masterBoard.getPiece(new ChessPosition(row, col)) != null) {
+            if (masterBoard.getPiece(new ChessPosition(row, col)).getTeamColor() != teamColor) {
+                Collection<ChessMove> moves = masterBoard.getPiece(
+                        new ChessPosition(row, col)).pieceMoves(masterBoard, new ChessPosition(row, col));
+                for (ChessMove move : moves) {
+                    if (move.getEndPosition().equals(kingLocation)) {
+                        return 1;
+                    }
+                }
+            }
+        }
+        return 0;
+    }
+
     /**
      * Determines if the given team is in check
      *
@@ -158,16 +173,9 @@ public class ChessGame {
 
         for (int row = 1; row <= 8; row++) {
             for (int col = 1; col <= 8; col++) {
-                if (masterBoard.getPiece(new ChessPosition(row, col)) != null) {
-                    if (masterBoard.getPiece(new ChessPosition(row, col)).getTeamColor() != teamColor) {
-                        Collection<ChessMove> moves = masterBoard.getPiece(
-                                new ChessPosition(row, col)).pieceMoves(masterBoard, new ChessPosition(row, col));
-                        for (ChessMove move : moves) {
-                            if (move.getEndPosition().equals(kingLocation)) {
-                                return true;
-                            }
-                        }
-                    }
+                int checker = isInCheckHelper(kingLocation, teamColor, row, col);
+                if (checker == 1) {
+                    return true;
                 }
             }
         }
