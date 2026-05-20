@@ -54,9 +54,17 @@ class UserServiceTest {
 
     @Test
     void logoutPositive() throws DataAccessException {
+        AuthData auth = userService.register("butt", "butt", "butt@mail");
+
+        userService.logout(auth.authToken());
+
+        assertTrue(true);
     }
 
     @Test
     void logoutNegative() throws DataAccessException {
+        AuthData auth = userService.register("butt", "butt", "butt@mail");
+
+        assertThrows(DataAccessException.class, () -> userService.logout(null));
     }
 }
