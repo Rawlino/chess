@@ -156,7 +156,8 @@ public class ChessGame {
             for (int col = 1; col <= 8; col++) {
                 if (masterBoard.getPiece(new ChessPosition(row, col)) != null) {
                     if (masterBoard.getPiece(new ChessPosition(row, col)).getTeamColor() != teamColor) {
-                        Collection<ChessMove> moves = masterBoard.getPiece(new ChessPosition(row, col)).pieceMoves(masterBoard, new ChessPosition(row, col));
+                        Collection<ChessMove> moves = masterBoard.getPiece(
+                                new ChessPosition(row, col)).pieceMoves(masterBoard, new ChessPosition(row, col));
                         for (ChessMove move : moves) {
                             if (move.getEndPosition().equals(kingLocation)) {
                                 return true;
@@ -167,6 +168,22 @@ public class ChessGame {
             }
         }
         return false;
+    }
+
+    public boolean validMoveChecker(TeamColor teamColor) {
+        for (int row = 1; row <= 8; row++) {
+            for (int col = 1; col <= 8; col++) {
+                if (masterBoard.getPiece(new ChessPosition(row, col)) != null) {
+                    if (masterBoard.getPiece(new ChessPosition(row, col)).getTeamColor() == teamColor) {
+                        Collection<ChessMove> moves = validMoves(new ChessPosition(row, col));
+                        if (!moves.isEmpty()) {
+                            return false;
+                        }
+                    }
+                }
+            }
+        }
+        return true;
     }
 
     /**
@@ -180,20 +197,7 @@ public class ChessGame {
             return false;
         }
 
-        for (int row = 1; row <= 8; row++) {
-            for (int col = 1; col <= 8; col++) {
-                if (masterBoard.getPiece(new ChessPosition(row, col)) != null) {
-                    if (masterBoard.getPiece(new ChessPosition(row, col)).getTeamColor() == teamColor) {
-                        Collection<ChessMove> moves = validMoves(new ChessPosition(row, col));
-                        if (!moves.isEmpty()) {
-                            return false;
-                        }
-                    }
-                }
-            }
-        }
-
-        return true;
+        return validMoveChecker(teamColor);
     }
 
     /**
@@ -208,20 +212,7 @@ public class ChessGame {
             return false;
         }
 
-        for (int row = 1; row <= 8; row++) {
-            for (int col = 1; col <= 8; col++) {
-                if (masterBoard.getPiece(new ChessPosition(row, col)) != null) {
-                    if (masterBoard.getPiece(new ChessPosition(row, col)).getTeamColor() == teamColor) {
-                        Collection<ChessMove> moves = validMoves(new ChessPosition(row, col));
-                        if (!moves.isEmpty()) {
-                            return false;
-                        }
-                    }
-                }
-            }
-        }
-
-        return true;
+        return validMoveChecker(teamColor);
     }
 
     /**
