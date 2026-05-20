@@ -80,6 +80,38 @@ public class ChessGame {
         return legalMoves;
     }
 
+    public void promotionMoveMaker(ChessMove move, ChessPiece piece) {
+        if (move.getPromotionPiece() == QUEEN) {
+            masterBoard.addPiece(move.getEndPosition(), new ChessPiece(piece.getTeamColor(), QUEEN));
+            if (teamTurn == TeamColor.WHITE) {
+                teamTurn = TeamColor.BLACK;
+            } else {
+                teamTurn = TeamColor.WHITE;
+            }
+        } else if (move.getPromotionPiece() ==  BISHOP) {
+            masterBoard.addPiece(move.getEndPosition(), new ChessPiece(piece.getTeamColor(), BISHOP));
+            if (teamTurn == TeamColor.WHITE) {
+                teamTurn = TeamColor.BLACK;
+            } else {
+                teamTurn = TeamColor.WHITE;
+            }
+        } else if (move.getPromotionPiece() ==  KNIGHT) {
+            masterBoard.addPiece(move.getEndPosition(), new ChessPiece(piece.getTeamColor(), KNIGHT));
+            if (teamTurn == TeamColor.WHITE) {
+                teamTurn = TeamColor.BLACK;
+            } else {
+                teamTurn = TeamColor.WHITE;
+            }
+        } else {
+            masterBoard.addPiece(move.getEndPosition(), new ChessPiece(piece.getTeamColor(), ROOK));
+            if (teamTurn == TeamColor.WHITE) {
+                teamTurn = TeamColor.BLACK;
+            } else {
+                teamTurn = TeamColor.WHITE;
+            }
+        }
+    }
+
     /**
      * Makes a move in the chess game
      *
@@ -98,35 +130,7 @@ public class ChessGame {
             if (legalMoves.contains(move)) {
                 masterBoard.addPiece(move.getStartPosition(), null);
                 if (move.getPromotionPiece() != null) {
-                    if (move.getPromotionPiece() == QUEEN) {
-                        masterBoard.addPiece(move.getEndPosition(), new ChessPiece(piece.getTeamColor(), QUEEN));
-                        if (teamTurn == TeamColor.WHITE) {
-                            teamTurn = TeamColor.BLACK;
-                        } else {
-                            teamTurn = TeamColor.WHITE;
-                        }
-                    } else if (move.getPromotionPiece() ==  BISHOP) {
-                        masterBoard.addPiece(move.getEndPosition(), new ChessPiece(piece.getTeamColor(), BISHOP));
-                        if (teamTurn == TeamColor.WHITE) {
-                            teamTurn = TeamColor.BLACK;
-                        } else {
-                            teamTurn = TeamColor.WHITE;
-                        }
-                    } else if (move.getPromotionPiece() ==  KNIGHT) {
-                        masterBoard.addPiece(move.getEndPosition(), new ChessPiece(piece.getTeamColor(), KNIGHT));
-                        if (teamTurn == TeamColor.WHITE) {
-                            teamTurn = TeamColor.BLACK;
-                        } else {
-                            teamTurn = TeamColor.WHITE;
-                        }
-                    } else {
-                        masterBoard.addPiece(move.getEndPosition(), new ChessPiece(piece.getTeamColor(), ROOK));
-                        if (teamTurn == TeamColor.WHITE) {
-                            teamTurn = TeamColor.BLACK;
-                        } else {
-                            teamTurn = TeamColor.WHITE;
-                        }
-                    }
+                    promotionMoveMaker(move, piece);
                 } else {
                     masterBoard.addPiece(move.getEndPosition(), piece);
                     if (teamTurn == TeamColor.WHITE) {
