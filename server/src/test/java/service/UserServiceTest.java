@@ -1,32 +1,56 @@
 package service;
 
+import dataaccess.DataAccessException;
+import dataaccess.MemoryAuthDAO;
+import dataaccess.MemoryGameDAO;
+import dataaccess.MemoryUserDAO;
+import model.AuthData;
+import model.UserData;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class UserServiceTest {
 
-    @Test
-    void registerPositive() {
+    private MemoryAuthDAO memoryAuthDAO;
+    private MemoryUserDAO memoryUserDAO;
+    private UserService userService;
+
+    @BeforeEach
+    void setup() throws DataAccessException {
+        memoryAuthDAO = new MemoryAuthDAO();
+        memoryUserDAO = new MemoryUserDAO();
+        userService = new UserService(memoryAuthDAO, memoryUserDAO);
     }
 
     @Test
-    void registerNegative() {
+    void registerPositive() throws DataAccessException {
+        AuthData auth = userService.register("butt", "butt", "butt@mail");
+
+        assertEquals("butt@mail", memoryUserDAO.getUser("butt").email());
     }
 
     @Test
-    void loginPositive() {
+    void registerNegative() throws DataAccessException {
+        userService.register("butt", "butt", "butt@mail");
+
+        assertThrows(DataAccessException.class, () -> userService.register("butt", "yourmom", "failbutt@mail"));
     }
 
     @Test
-    void loginNegative() {
+    void loginPositive() throws DataAccessException {
     }
 
     @Test
-    void logoutPositive() {
+    void loginNegative() throws DataAccessException {
     }
 
     @Test
-    void logoutNegative() {
+    void logoutPositive() throws DataAccessException {
+    }
+
+    @Test
+    void logoutNegative() throws DataAccessException {
     }
 }
