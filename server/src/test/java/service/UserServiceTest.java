@@ -40,10 +40,16 @@ class UserServiceTest {
 
     @Test
     void loginPositive() throws DataAccessException {
+        AuthData auth = userService.register("butt", "butt", "butt@mail");
+
+        assertEquals(auth, memoryAuthDAO.getAuth(auth.authToken()));
     }
 
     @Test
     void loginNegative() throws DataAccessException {
+        AuthData auth = userService.register("butt", "butt", "butt@mail");
+
+        assertThrows(DataAccessException.class, () -> userService.login("butt", "definitelyNotWrongPassword"));
     }
 
     @Test
