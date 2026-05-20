@@ -46,6 +46,11 @@ class GameServiceTest {
 
     @Test
     void createGamePositive() throws DataAccessException {
+        AuthData auth = userService.login("butt", "butt");
+
+        int ID = gameService.createGame(auth.authToken(), "Test");
+
+        assertEquals("Test", memoryGameDAO.getGame(ID).gameName());
     }
 
     @Test
@@ -54,6 +59,13 @@ class GameServiceTest {
 
     @Test
     void joinGamePositive() throws DataAccessException {
+        AuthData auth = userService.login("butt", "butt");
+
+        int ID = gameService.createGame(auth.authToken(), "Test");
+
+        boolean result = gameService.joinGame(auth.authToken(), "WHITE", ID);
+
+        assertTrue(result);
     }
 
     @Test
