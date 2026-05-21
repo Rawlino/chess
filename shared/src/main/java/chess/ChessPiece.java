@@ -226,17 +226,20 @@ public class ChessPiece {
                             piece.getTeamColor())) {
                         //pass
                     } else {
-                        moves.add(new ChessMove(new ChessPosition(myPosition.getRow(), myPosition.getColumn()),
-                                new ChessPosition(myPosition.getRow() + possibleMoves[i][0],
-                                        myPosition.getColumn() + possibleMoves[i][1]), null));
+                        stupidFetchingMethod(moves, myPosition, possibleMoves, i);
                     }
                 } else {
-                    moves.add(new ChessMove(new ChessPosition(myPosition.getRow(), myPosition.getColumn()),
-                            new ChessPosition(myPosition.getRow() + possibleMoves[i][0],
-                                    myPosition.getColumn() + possibleMoves[i][1]), null));
+                    stupidFetchingMethod(moves, myPosition, possibleMoves, i);
                 }
             }
         }
+    }
+
+    private void stupidFetchingMethod(ArrayList<ChessMove> moves, ChessPosition myPosition, int[][] possibleMoves,
+                                      int i) {
+        moves.add(new ChessMove(new ChessPosition(myPosition.getRow(), myPosition.getColumn()),
+                new ChessPosition(myPosition.getRow() + possibleMoves[i][0],
+                        myPosition.getColumn() + possibleMoves[i][1]), null));
     }
 
     private void straightDownLeft(ChessPosition myPosition, ChessPiece piece, ChessBoard board,
