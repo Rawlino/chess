@@ -143,15 +143,21 @@ public class ChessPiece {
                         + pawnMoves[i][1]), PieceType.ROOK));
     }
 
-    private void pawnOneAndTwoMoves(ChessBoard board, ChessPosition myPosition, int[][] pawnMoves, int i, ArrayList<ChessMove> moves, ChessPiece piece) {
-        if (board.getPiece(new ChessPosition(myPosition.getRow() + pawnMoves[i][0], myPosition.getColumn() + pawnMoves[i][1])) != null) {
-            if ((board.getPiece(new ChessPosition(myPosition.getRow() + pawnMoves[i][0], myPosition.getColumn() + pawnMoves[i][1])).getTeamColor() == piece.getTeamColor())) {
+    private void pawnOneAndTwoMoves(ChessBoard board, ChessPosition myPosition, int[][] pawnMoves, int i,
+                                    ArrayList<ChessMove> moves, ChessPiece piece) {
+        if (board.getPiece(new ChessPosition(myPosition.getRow() + pawnMoves[i][0], myPosition.getColumn()
+                + pawnMoves[i][1])) != null) {
+            if ((board.getPiece(new ChessPosition(myPosition.getRow() + pawnMoves[i][0],
+                    myPosition.getColumn() + pawnMoves[i][1])).getTeamColor() == piece.getTeamColor())) {
                 //pass
-            } else if ((board.getPiece(new ChessPosition(myPosition.getRow() + pawnMoves[i][0], myPosition.getColumn() + pawnMoves[i][1])).getTeamColor() != piece.getTeamColor())) {
+            } else if ((board.getPiece(new ChessPosition(myPosition.getRow() + pawnMoves[i][0],
+                    myPosition.getColumn() + pawnMoves[i][1])).getTeamColor() != piece.getTeamColor())) {
                 if (myPosition.getRow() + pawnMoves[i][0] == 1 || myPosition.getRow() + pawnMoves[i][0] == 8) {
                     promotionHelper(moves, myPosition, pawnMoves, i);
                 } else {
-                    moves.add(new ChessMove(new ChessPosition(myPosition.getRow(), myPosition.getColumn()), new ChessPosition(myPosition.getRow() + pawnMoves[i][0], myPosition.getColumn() + pawnMoves[i][1]), null));
+                    moves.add(new ChessMove(new ChessPosition(myPosition.getRow(), myPosition.getColumn()),
+                            new ChessPosition(myPosition.getRow() + pawnMoves[i][0], myPosition.getColumn()
+                                    + pawnMoves[i][1]), null));
                 }
             } else {
                 //pass
@@ -159,36 +165,50 @@ public class ChessPiece {
         }
     }
 
-    private void pawnMoves(ChessBoard board, ChessPosition myPosition, int[][] pawnMoves, ArrayList<ChessMove> moves, ChessPiece piece) {
+    private void addPawnMoveHelper(ArrayList<ChessMove> moves, ChessPosition myPosition, int[][] pawnMoves, int i) {
+        moves.add(new ChessMove(new ChessPosition(myPosition.getRow(), myPosition.getColumn()),
+                new ChessPosition(myPosition.getRow() + pawnMoves[i][0], myPosition.getColumn()
+                        + pawnMoves[i][1]), null));
+    }
+
+    private ChessPiece pawnPieceCheckerHelper(ChessBoard board, ChessPosition myPosition, int[][] pawnMoves, int i) {
+        return board.getPiece(new ChessPosition(myPosition.getRow() + pawnMoves[i][0],
+                myPosition.getColumn() + pawnMoves[i][1]));
+    }
+
+    private void pawnMoves(ChessBoard board, ChessPosition myPosition, int[][] pawnMoves, ArrayList<ChessMove> moves,
+                           ChessPiece piece) {
         for (int i = 0; i < 4; i++) {
             if (!isInBounds(myPosition.getRow() + pawnMoves[i][0], myPosition.getColumn() + pawnMoves[i][1])) {
                 //pass
             } else if (i == 3 && myPosition.getRow() == 2 && piece.getTeamColor() == WHITE ) {
-                if (board.getPiece(new ChessPosition(myPosition.getRow() + pawnMoves[i][0], myPosition.getColumn() + pawnMoves[i][1])) != null) {
+                if (pawnPieceCheckerHelper(board, myPosition, pawnMoves, i) != null) {
                     //pass
-                } else if (board.getPiece(new ChessPosition(myPosition.getRow() + pawnMoves[i][0] - 1, myPosition.getColumn() + pawnMoves[i][1])) != null) {
+                } else if (board.getPiece(new ChessPosition(myPosition.getRow() + pawnMoves[i][0] - 1,
+                        myPosition.getColumn() + pawnMoves[i][1])) != null) {
                     //pass
                 } else {
-                    moves.add(new ChessMove(new ChessPosition(myPosition.getRow(), myPosition.getColumn()), new ChessPosition(myPosition.getRow() + pawnMoves[i][0], myPosition.getColumn() + pawnMoves[i][1]), null));
+                    addPawnMoveHelper(moves, myPosition, pawnMoves, i);
                 }
             } else if (i == 3 && myPosition.getRow() == 7 && piece.getTeamColor() == BLACK) {
-                if (board.getPiece(new ChessPosition(myPosition.getRow() + pawnMoves[i][0], myPosition.getColumn() + pawnMoves[i][1])) != null) {
+                if (pawnPieceCheckerHelper(board, myPosition, pawnMoves, i) != null) {
                     //pass
-                } else if (board.getPiece(new ChessPosition(myPosition.getRow() + pawnMoves[i][0] + 1, myPosition.getColumn() + pawnMoves[i][1])) != null) {
+                } else if (board.getPiece(new ChessPosition(myPosition.getRow() + pawnMoves[i][0] + 1,
+                        myPosition.getColumn() + pawnMoves[i][1])) != null) {
                     //pass
                 } else {
-                    moves.add(new ChessMove(new ChessPosition(myPosition.getRow(), myPosition.getColumn()), new ChessPosition(myPosition.getRow() + pawnMoves[i][0], myPosition.getColumn() + pawnMoves[i][1]), null));
+                    addPawnMoveHelper(moves, myPosition, pawnMoves, i);
                 }
             } else if (i == 1 || i == 2) {
                 pawnOneAndTwoMoves(board, myPosition, pawnMoves, i, moves, piece);
             } else if (i == 0) {
-                if (board.getPiece(new ChessPosition(myPosition.getRow() + pawnMoves[i][0], myPosition.getColumn() + pawnMoves[i][1])) != null) {
+                if (pawnPieceCheckerHelper(board, myPosition, pawnMoves, i) != null) {
                     //pass
                 } else {
                     if (myPosition.getRow() + pawnMoves[i][0] == 1 || myPosition.getRow() + pawnMoves[i][0] == 8) {
                         promotionHelper(moves, myPosition, pawnMoves, i);
                     } else {
-                        moves.add(new ChessMove(new ChessPosition(myPosition.getRow(), myPosition.getColumn()), new ChessPosition(myPosition.getRow() + pawnMoves[i][0], myPosition.getColumn() + pawnMoves[i][1]), null));
+                        addPawnMoveHelper(moves, myPosition, pawnMoves, i);
                     }
                 }
             }
