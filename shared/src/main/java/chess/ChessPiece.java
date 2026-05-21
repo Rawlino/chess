@@ -145,8 +145,7 @@ public class ChessPiece {
 
     private void pawnOneAndTwoMoves(ChessBoard board, ChessPosition myPosition, int[][] pawnMoves, int i,
                                     ArrayList<ChessMove> moves, ChessPiece piece) {
-        if (board.getPiece(new ChessPosition(myPosition.getRow() + pawnMoves[i][0], myPosition.getColumn()
-                + pawnMoves[i][1])) != null) {
+        if (pawnPieceCheckerHelper(board, myPosition, pawnMoves, i) != null) {
             if ((board.getPiece(new ChessPosition(myPosition.getRow() + pawnMoves[i][0],
                     myPosition.getColumn() + pawnMoves[i][1])).getTeamColor() == piece.getTeamColor())) {
                 //pass
@@ -155,18 +154,12 @@ public class ChessPiece {
                 if (myPosition.getRow() + pawnMoves[i][0] == 1 || myPosition.getRow() + pawnMoves[i][0] == 8) {
                     promotionHelper(moves, myPosition, pawnMoves, i);
                 } else {
-                    addPawnMoveHelper(moves, myPosition, pawnMoves, i);
+                    stupidFetchingMethod(moves, myPosition, pawnMoves, i);
                 }
             } else {
                 //pass
             }
         }
-    }
-
-    private void addPawnMoveHelper(ArrayList<ChessMove> moves, ChessPosition myPosition, int[][] pawnMoves, int i) {
-        moves.add(new ChessMove(new ChessPosition(myPosition.getRow(), myPosition.getColumn()),
-                new ChessPosition(myPosition.getRow() + pawnMoves[i][0], myPosition.getColumn()
-                        + pawnMoves[i][1]), null));
     }
 
     private ChessPiece pawnPieceCheckerHelper(ChessBoard board, ChessPosition myPosition, int[][] pawnMoves, int i) {
@@ -186,7 +179,7 @@ public class ChessPiece {
                         myPosition.getColumn() + pawnMoves[i][1])) != null) {
                     //pass
                 } else {
-                    addPawnMoveHelper(moves, myPosition, pawnMoves, i);
+                    stupidFetchingMethod(moves, myPosition, pawnMoves, i);
                 }
             } else if (i == 3 && myPosition.getRow() == 7 && piece.getTeamColor() == BLACK) {
                 if (pawnPieceCheckerHelper(board, myPosition, pawnMoves, i) != null) {
@@ -195,7 +188,7 @@ public class ChessPiece {
                         myPosition.getColumn() + pawnMoves[i][1])) != null) {
                     //pass
                 } else {
-                    addPawnMoveHelper(moves, myPosition, pawnMoves, i);
+                    stupidFetchingMethod(moves, myPosition, pawnMoves, i);
                 }
             } else if (i == 1 || i == 2) {
                 pawnOneAndTwoMoves(board, myPosition, pawnMoves, i, moves, piece);
@@ -206,7 +199,7 @@ public class ChessPiece {
                     if (myPosition.getRow() + pawnMoves[i][0] == 1 || myPosition.getRow() + pawnMoves[i][0] == 8) {
                         promotionHelper(moves, myPosition, pawnMoves, i);
                     } else {
-                        addPawnMoveHelper(moves, myPosition, pawnMoves, i);
+                        stupidFetchingMethod(moves, myPosition, pawnMoves, i);
                     }
                 }
             }
