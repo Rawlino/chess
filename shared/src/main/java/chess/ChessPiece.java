@@ -155,9 +155,7 @@ public class ChessPiece {
                 if (myPosition.getRow() + pawnMoves[i][0] == 1 || myPosition.getRow() + pawnMoves[i][0] == 8) {
                     promotionHelper(moves, myPosition, pawnMoves, i);
                 } else {
-                    moves.add(new ChessMove(new ChessPosition(myPosition.getRow(), myPosition.getColumn()),
-                            new ChessPosition(myPosition.getRow() + pawnMoves[i][0], myPosition.getColumn()
-                                    + pawnMoves[i][1]), null));
+                    addPawnMoveHelper(moves, myPosition, pawnMoves, i);
                 }
             } else {
                 //pass
