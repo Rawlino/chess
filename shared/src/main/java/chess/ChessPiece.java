@@ -151,7 +151,7 @@ public class ChessPiece {
                 //pass
             } else if ((board.getPiece(new ChessPosition(myPosition.getRow() + pawnMoves[i][0],
                     myPosition.getColumn() + pawnMoves[i][1])).getTeamColor() != piece.getTeamColor())) {
-                if (myPosition.getRow() + pawnMoves[i][0] == 1 || myPosition.getRow() + pawnMoves[i][0] == 8) {
+                if (stupidFetchingMethodMkTwo(myPosition, pawnMoves, i)) {
                     promotionHelper(moves, myPosition, pawnMoves, i);
                 } else {
                     stupidFetchingMethod(moves, myPosition, pawnMoves, i);
@@ -165,6 +165,10 @@ public class ChessPiece {
     private ChessPiece pawnPieceCheckerHelper(ChessBoard board, ChessPosition myPosition, int[][] pawnMoves, int i) {
         return board.getPiece(new ChessPosition(myPosition.getRow() + pawnMoves[i][0],
                 myPosition.getColumn() + pawnMoves[i][1]));
+    }
+
+    private boolean stupidFetchingMethodMkTwo(ChessPosition myPosition, int[][] pawnMoves, int i) {
+        return myPosition.getRow() + pawnMoves[i][0] == 1 || myPosition.getRow() + pawnMoves[i][0] == 8;
     }
 
     private void pawnMoves(ChessBoard board, ChessPosition myPosition, int[][] pawnMoves, ArrayList<ChessMove> moves,
@@ -196,7 +200,7 @@ public class ChessPiece {
                 if (pawnPieceCheckerHelper(board, myPosition, pawnMoves, i) != null) {
                     //pass
                 } else {
-                    if (myPosition.getRow() + pawnMoves[i][0] == 1 || myPosition.getRow() + pawnMoves[i][0] == 8) {
+                    if (stupidFetchingMethodMkTwo(myPosition, pawnMoves, i)) {
                         promotionHelper(moves, myPosition, pawnMoves, i);
                     } else {
                         stupidFetchingMethod(moves, myPosition, pawnMoves, i);
