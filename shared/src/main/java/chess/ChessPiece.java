@@ -146,10 +146,7 @@ public class ChessPiece {
                         //pass
                     } else if ((board.getPiece(new ChessPosition(myPosition.getRow() + pawnMoves[i][0], myPosition.getColumn() + pawnMoves[i][1])).getTeamColor() != piece.getTeamColor())) {
                         if (myPosition.getRow() + pawnMoves[i][0] == 1) {
-                            moves.add(new ChessMove(new ChessPosition(myPosition.getRow(), myPosition.getColumn()), new ChessPosition(myPosition.getRow() + pawnMoves[i][0], myPosition.getColumn() + pawnMoves[i][1]), PieceType.QUEEN));
-                            moves.add(new ChessMove(new ChessPosition(myPosition.getRow(), myPosition.getColumn()), new ChessPosition(myPosition.getRow() + pawnMoves[i][0], myPosition.getColumn() + pawnMoves[i][1]), PieceType.BISHOP));
-                            moves.add(new ChessMove(new ChessPosition(myPosition.getRow(), myPosition.getColumn()), new ChessPosition(myPosition.getRow() + pawnMoves[i][0], myPosition.getColumn() + pawnMoves[i][1]), PieceType.KNIGHT));
-                            moves.add(new ChessMove(new ChessPosition(myPosition.getRow(), myPosition.getColumn()), new ChessPosition(myPosition.getRow() + pawnMoves[i][0], myPosition.getColumn() + pawnMoves[i][1]), PieceType.ROOK));
+                            promotionHelper(moves, myPosition, pawnMoves, i);
                         } else {
                             moves.add(new ChessMove(new ChessPosition(myPosition.getRow(), myPosition.getColumn()), new ChessPosition(myPosition.getRow() + pawnMoves[i][0], myPosition.getColumn() + pawnMoves[i][1]), null));
                         }
@@ -162,16 +159,28 @@ public class ChessPiece {
                     //pass
                 } else {
                     if (myPosition.getRow() + pawnMoves[i][0] == 1) {
-                        moves.add(new ChessMove(new ChessPosition(myPosition.getRow(), myPosition.getColumn()), new ChessPosition(myPosition.getRow() + pawnMoves[i][0], myPosition.getColumn() + pawnMoves[i][1]), PieceType.QUEEN));
-                        moves.add(new ChessMove(new ChessPosition(myPosition.getRow(), myPosition.getColumn()), new ChessPosition(myPosition.getRow() + pawnMoves[i][0], myPosition.getColumn() + pawnMoves[i][1]), PieceType.BISHOP));
-                        moves.add(new ChessMove(new ChessPosition(myPosition.getRow(), myPosition.getColumn()), new ChessPosition(myPosition.getRow() + pawnMoves[i][0], myPosition.getColumn() + pawnMoves[i][1]), PieceType.KNIGHT));
-                        moves.add(new ChessMove(new ChessPosition(myPosition.getRow(), myPosition.getColumn()), new ChessPosition(myPosition.getRow() + pawnMoves[i][0], myPosition.getColumn() + pawnMoves[i][1]), PieceType.ROOK));
+                        promotionHelper(moves, myPosition, pawnMoves, i);
                     } else {
                         moves.add(new ChessMove(new ChessPosition(myPosition.getRow(), myPosition.getColumn()), new ChessPosition(myPosition.getRow() + pawnMoves[i][0], myPosition.getColumn() + pawnMoves[i][1]), null));
                     }
                 }
             }
         }
+    }
+
+    private void promotionHelper(ArrayList<ChessMove> moves, ChessPosition myPosition, int[][] pawnMoves, int i) {
+        moves.add(new ChessMove(new ChessPosition(myPosition.getRow(), myPosition.getColumn()),
+                new ChessPosition(myPosition.getRow() + pawnMoves[i][0], myPosition.getColumn()
+                        + pawnMoves[i][1]), PieceType.QUEEN));
+        moves.add(new ChessMove(new ChessPosition(myPosition.getRow(), myPosition.getColumn()),
+                new ChessPosition(myPosition.getRow() + pawnMoves[i][0], myPosition.getColumn()
+                        + pawnMoves[i][1]), PieceType.BISHOP));
+        moves.add(new ChessMove(new ChessPosition(myPosition.getRow(), myPosition.getColumn()),
+                new ChessPosition(myPosition.getRow() + pawnMoves[i][0], myPosition.getColumn()
+                        + pawnMoves[i][1]), PieceType.KNIGHT));
+        moves.add(new ChessMove(new ChessPosition(myPosition.getRow(), myPosition.getColumn()),
+                new ChessPosition(myPosition.getRow() + pawnMoves[i][0], myPosition.getColumn()
+                        + pawnMoves[i][1]), PieceType.ROOK));
     }
 
     private void wPawnMoves(ChessBoard board, ChessPosition myPosition, int[][] pawnMoves, ArrayList<ChessMove> moves, ChessPiece piece) {
@@ -192,10 +201,7 @@ public class ChessPiece {
                         //pass
                     } else if ((board.getPiece(new ChessPosition(myPosition.getRow() + pawnMoves[i][0], myPosition.getColumn() + pawnMoves[i][1])).getTeamColor() != piece.getTeamColor())) {
                         if (myPosition.getRow() + pawnMoves[i][0] == 8) {
-                            moves.add(new ChessMove(new ChessPosition(myPosition.getRow(), myPosition.getColumn()), new ChessPosition(myPosition.getRow() + pawnMoves[i][0], myPosition.getColumn() + pawnMoves[i][1]), PieceType.QUEEN));
-                            moves.add(new ChessMove(new ChessPosition(myPosition.getRow(), myPosition.getColumn()), new ChessPosition(myPosition.getRow() + pawnMoves[i][0], myPosition.getColumn() + pawnMoves[i][1]), PieceType.BISHOP));
-                            moves.add(new ChessMove(new ChessPosition(myPosition.getRow(), myPosition.getColumn()), new ChessPosition(myPosition.getRow() + pawnMoves[i][0], myPosition.getColumn() + pawnMoves[i][1]), PieceType.KNIGHT));
-                            moves.add(new ChessMove(new ChessPosition(myPosition.getRow(), myPosition.getColumn()), new ChessPosition(myPosition.getRow() + pawnMoves[i][0], myPosition.getColumn() + pawnMoves[i][1]), PieceType.ROOK));
+                            promotionHelper(moves, myPosition, pawnMoves, i);
                         } else {
                             moves.add(new ChessMove(new ChessPosition(myPosition.getRow(), myPosition.getColumn()), new ChessPosition(myPosition.getRow() + pawnMoves[i][0], myPosition.getColumn() + pawnMoves[i][1]), null));
                         }
@@ -208,10 +214,7 @@ public class ChessPiece {
                     //pass
                 } else {
                     if (myPosition.getRow() + pawnMoves[i][0] == 8) {
-                        moves.add(new ChessMove(new ChessPosition(myPosition.getRow(), myPosition.getColumn()), new ChessPosition(myPosition.getRow() + pawnMoves[i][0], myPosition.getColumn() + pawnMoves[i][1]), PieceType.QUEEN));
-                        moves.add(new ChessMove(new ChessPosition(myPosition.getRow(), myPosition.getColumn()), new ChessPosition(myPosition.getRow() + pawnMoves[i][0], myPosition.getColumn() + pawnMoves[i][1]), PieceType.BISHOP));
-                        moves.add(new ChessMove(new ChessPosition(myPosition.getRow(), myPosition.getColumn()), new ChessPosition(myPosition.getRow() + pawnMoves[i][0], myPosition.getColumn() + pawnMoves[i][1]), PieceType.KNIGHT));
-                        moves.add(new ChessMove(new ChessPosition(myPosition.getRow(), myPosition.getColumn()), new ChessPosition(myPosition.getRow() + pawnMoves[i][0], myPosition.getColumn() + pawnMoves[i][1]), PieceType.ROOK));
+                        promotionHelper(moves, myPosition, pawnMoves, i);
                     } else {
                         moves.add(new ChessMove(new ChessPosition(myPosition.getRow(), myPosition.getColumn()), new ChessPosition(myPosition.getRow() + pawnMoves[i][0], myPosition.getColumn() + pawnMoves[i][1]), null));
                     }
