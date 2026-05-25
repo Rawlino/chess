@@ -1,5 +1,9 @@
 package dataaccess;
 
+import chess.ChessGame;
+import com.google.gson.Gson;
+import model.GameData;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -13,6 +17,17 @@ public class MySQLGameDAO {
 
     public MySQLGameDAO() throws DataAccessException {
         configureDatabase();
+    }
+
+    private GameData readGame(ResultSet rs) throws SQLException {
+        var gameID = rs.getInt("gameID");
+        var whiteUsername = rs.getString("username");
+        var blackUsername = rs.getString("password");
+        var gameName = rs.getString("email");
+        var game = rs.getString("game");
+        ChessGame chessGame = new Gson().fromJson(game, ChessGame.class);
+        GameData gameData = new GameData(gameID, whiteUsername, blackUsername, gameName, chessGame);
+        return gameData;
     }
 
     private int executeUpdate(String statement, Object... params) throws DataAccessException {
