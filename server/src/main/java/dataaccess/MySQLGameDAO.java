@@ -38,6 +38,7 @@ public class MySQLGameDAO {
         }
     }
 
+    //EDIT THIS TO MATCH NECESSARY TABLE FOR GAME
     private final String[] createStatements = {
             """
             CREATE TABLE IF NOT EXISTS  auth (

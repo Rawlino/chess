@@ -31,7 +31,8 @@ public class MySQLAuthDAO implements AuthDAO {
     }
 
     public void clear() throws DataAccessException {
-
+        var statement = "TRUNCATE auth";
+        executeUpdate(statement);
     }
 
     private int executeUpdate(String statement, Object... params) throws DataAccessException {
