@@ -8,6 +8,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collection;
 
 import static dataaccess.DatabaseManager.createDatabase;
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
@@ -17,6 +19,70 @@ public class MySQLGameDAO {
 
     public MySQLGameDAO() throws DataAccessException {
         configureDatabase();
+    }
+
+    public int createGame(String whiteUsername, String blackUsername, String gameName, ChessGame game)
+            throws DataAccessException {
+        var statement = "INSERT INTO games (gameID, whiteUsername, blackUsername, gameName, game) VALUES (?, ?, ?, ?, ?)";
+        String readableGame = new Gson().toJson(game);
+        int gameID = executeUpdate(statement, whiteUsername, blackUsername, gameName, readableGame);
+        return gameID;
+    }
+
+    public GameData getGame(int gameID) throws DataAccessException {
+        try (Connection conn = DatabaseManager.getConnection()) {
+            var statement = "SELECT gameID, whiteUsername, blackUsername, gameName, game FROM games WHERE gameID=?";
+            try (PreparedStatement ps = conn.prepareStatement(statement)) {
+                ps.setInt(1, gameID);
+                try (ResultSet rs = ps.executeQuery()) {
+                    if (rs.next()) {
+                        return readGame(rs);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            throw new DataAccessException(String.format("Unable to read data: %s", e.getMessage()));
+        }
+        return null;
+    }
+
+    public Collection<GameData> listGames() throws DataAccessException {
+        var result = new ArrayList<GameData>();
+        try (Connection conn = DatabaseManager.getConnection()) {
+            var statement = "SELECT gameID, whiteUsername, blackUsername, gameName, game FROM games";
+            try (PreparedStatement ps = conn.prepareStatement(statement)) {
+                try (ResultSet rs = ps.executeQuery()) {
+                    while (rs.next()) {
+                        result.add(readGame(rs));
+                    }
+                }
+            }
+        } catch (Exception e) {
+            throw new DataAccessException(String.format("Unable to read data: %s", e.getMessage()));
+        }
+        return result;
+    }
+
+    public void updateGame(int gameID, String whiteUsername, String blackUsername, String gameName, ChessGame game)
+            throws DataAccessException {
+        try (Connection conn = DatabaseManager.getConnection()) {
+            var statement = "SELECT gameID, whiteUsername, blackUsername, gameName, game FROM games WHERE gameID=?";
+            try (PreparedStatement ps = conn.prepareStatement(statement)) {
+                ps.setInt(1, gameID);
+                try (ResultSet rs = ps.executeQuery()) {
+                    if (rs.next()) {
+
+                    }
+                }
+            }
+        } catch (Exception e) {
+            throw new DataAccessException(String.format("Unable to update data: %s", e.getMessage()));
+        }
+    }
+
+    public void clear() throws DataAccessException {
+        var statement = "TRUNCATE games";
+        executeUpdate(statement);
     }
 
     private GameData readGame(ResultSet rs) throws SQLException {
@@ -56,7 +122,7 @@ public class MySQLGameDAO {
     //EDIT THIS TO MATCH NECESSARY TABLE FOR GAME
     private final String[] createStatements = {
             """
-            CREATE TABLE IF NOT EXISTS  auth (
+            CREATE TABLE IF NOT EXISTS  games (
               `gameID` int NOT NULL AUTO_INCREMENT,
               `whiteUsername` VARCHAR(255) NOT NULL,
               `blackUsername` VARCHAR(255) NOT NULL,
