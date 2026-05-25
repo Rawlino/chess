@@ -19,15 +19,39 @@ public class MySQLAuthDAO implements AuthDAO {
     }
 
     public AuthData createAuth(String authToken, String username) throws DataAccessException {
-        throw new DataAccessException("Not implemented");
+        var statement = "INSERT INTO auth (authToken, username) VALUES (?, ?)";
+        String json = new Gson().toJson(pet);
+        int id = executeUpdate(statement, pet.name(), pet.type(), json);
+        return new AuthData();
     }
 
     public AuthData getAuth(String authToken) throws DataAccessException {
-        throw new DataAccessException("Not implemented");
+        try (Connection conn = DatabaseManager.getConnection()) {
+            var statement = "SELECT authData, username FROM auth WHERE authToken=?";
+            try (PreparedStatement ps = conn.prepareStatement(statement)) {
+                ps.setString(1, authToken);
+                try (ResultSet rs = ps.executeQuery()) {
+                    if (rs.next()) {
+                        return readAuth(rs);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            throw new DataAccessException(String.format("Unable to read data: %s", e.getMessage()));
+        }
+        return null;
+    }
+
+    private AuthData readAuth(ResultSet rs) throws SQLException {
+        var authToken = rs.getString("authToken");
+        var username = rs.getString("username");
+        AuthData authData = new AuthData(authToken, username);
+        return authData;
     }
 
     public void deleteAuth(String authToken) throws DataAccessException {
-
+        var statement = "DELETE FROM auth WHERE authToken=?";
+        executeUpdate(statement, authToken);
     }
 
     public void clear() throws DataAccessException {
