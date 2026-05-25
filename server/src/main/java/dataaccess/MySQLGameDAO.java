@@ -57,9 +57,12 @@ public class MySQLGameDAO {
     private final String[] createStatements = {
             """
             CREATE TABLE IF NOT EXISTS  auth (
-              `authToken` VARCHAR(255) NOT NULL,
-              `username` VARCHAR(255) NOT NULL,
-              PRIMARY KEY (`authToken`)
+              `gameID` int NOT NULL AUTO_INCREMENT,
+              `whiteUsername` VARCHAR(255) NOT NULL,
+              `blackUsername` VARCHAR(255) NOT NULL,
+              `gameName` VARCHAR(255) NOT NULL,
+              `game` TEXT DEFAULT NULL,
+              PRIMARY KEY (`gameID`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
             """
     };
