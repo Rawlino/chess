@@ -17,6 +17,21 @@ public class MySQLUserDAO {
         configureDatabase();
     }
 
+    public UserData createUser(String username, String password, String email) {
+        UserData newUser = new UserData(username, password, email);
+
+        users.put(username, newUser);
+        return newUser;
+    }
+
+    public UserData getUser(String username) {
+        return users.get(username);
+    }
+
+    public void clear() {
+        users.clear();
+    }
+
     private UserData readUser(ResultSet rs) throws SQLException {
         var username = rs.getString("username");
         var password = rs.getString("password");
@@ -48,13 +63,13 @@ public class MySQLUserDAO {
         }
     }
 
-    //EDIT THIS TO MATCH NECESSARY TABLE FOR USER
     private final String[] createStatements = {
             """
             CREATE TABLE IF NOT EXISTS  auth (
-              `authToken` VARCHAR(255) NOT NULL,
               `username` VARCHAR(255) NOT NULL,
-              PRIMARY KEY (`authToken`)
+              `password` VARCHAR(255) NOT NULL,
+              `email` VARCHAR(255) NOT NULL,
+              PRIMARY KEY (`username`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
             """
     };
