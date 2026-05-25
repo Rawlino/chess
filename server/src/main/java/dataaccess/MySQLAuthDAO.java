@@ -1,7 +1,6 @@
 package dataaccess;
 
 import java.sql.Connection;
-import com.google.gson.Gson;
 import model.*;
 
 import java.sql.*;
@@ -20,9 +19,8 @@ public class MySQLAuthDAO implements AuthDAO {
 
     public AuthData createAuth(String authToken, String username) throws DataAccessException {
         var statement = "INSERT INTO auth (authToken, username) VALUES (?, ?)";
-        String json = new Gson().toJson(pet);
-        int id = executeUpdate(statement, pet.name(), pet.type(), json);
-        return new AuthData();
+        executeUpdate(statement, authToken, username);
+        return new AuthData(authToken, username);
     }
 
     public AuthData getAuth(String authToken) throws DataAccessException {
