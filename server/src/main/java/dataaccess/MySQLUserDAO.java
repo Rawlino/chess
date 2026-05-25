@@ -1,5 +1,8 @@
 package dataaccess;
 
+import model.AuthData;
+import model.UserData;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -13,6 +16,14 @@ public class MySQLUserDAO {
 
     public MySQLUserDAO() throws DataAccessException {
         configureDatabase();
+    }
+
+    private UserData readUser(ResultSet rs) throws SQLException {
+        var username = rs.getString("username");
+        var password = rs.getString("password");
+        var email = rs.getString("email");
+        UserData userData = new UserData(username, password, email);
+        return userData;
     }
 
     private int executeUpdate(String statement, Object... params) throws DataAccessException {
