@@ -5,6 +5,7 @@ import dataaccess.AuthDAO;
 import dataaccess.DataAccessException;
 import model.AuthData;
 import model.UserData;
+import org.mindrot.jbcrypt.BCrypt;
 
 import java.util.UUID;
 
@@ -51,11 +52,16 @@ public class UserService {
             throw new DataAccessException("Error: bad request");
         } else if (user == null) {
             throw new DataAccessException("Error: unauthorized");
+        } else if (user.password().startsWith("$2a$") || user.password().startsWith("$2b$") || user.password().startsWith("$2y$")) {
+            if (!BCrypt.checkpw(password, user.password())) {
+                throw new DataAccessException("Error: unauthorized");
+            }
         } else if (!user.password().equals(password)) {
             throw new DataAccessException("Error: unauthorized");
         } else {
             return authDAO.createAuth(authToken, username);
         }
+        return null;
     }
 
     public boolean logout(String authToken) throws DataAccessException {
