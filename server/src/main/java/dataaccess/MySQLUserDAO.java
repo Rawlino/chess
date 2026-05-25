@@ -1,5 +1,6 @@
 package dataaccess;
 
+import model.AuthData;
 import model.UserData;
 
 import java.sql.Connection;
@@ -17,19 +18,32 @@ public class MySQLUserDAO {
         configureDatabase();
     }
 
-    public UserData createUser(String username, String password, String email) {
-        UserData newUser = new UserData(username, password, email);
-
-        users.put(username, newUser);
-        return newUser;
+    public UserData createUser(String username, String password, String email) throws DataAccessException {
+        var statement = "INSERT INTO auth (authToken, username) VALUES (?, ?)";
+        executeUpdate(statement, authToken, username);
+        return new AuthData(authToken, username);
     }
 
-    public UserData getUser(String username) {
-        return users.get(username);
+    public UserData getUser(String username) throws DataAccessException {
+        try (Connection conn = DatabaseManager.getConnection()) {
+            var statement = "SELECT username, password, email FROM user WHERE username=?";
+            try (PreparedStatement ps = conn.prepareStatement(statement)) {
+                ps.setString(1, username);
+                try (ResultSet rs = ps.executeQuery()) {
+                    if (rs.next()) {
+                        return readUser(rs);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            throw new DataAccessException(String.format("Unable to read data: %s", e.getMessage()));
+        }
+        return null;
     }
 
-    public void clear() {
-        users.clear();
+    public void clear() throws DataAccessException {
+        var statement = "TRUNCATE user";
+        executeUpdate(statement);
     }
 
     private UserData readUser(ResultSet rs) throws SQLException {
@@ -65,7 +79,7 @@ public class MySQLUserDAO {
 
     private final String[] createStatements = {
             """
-            CREATE TABLE IF NOT EXISTS  auth (
+            CREATE TABLE IF NOT EXISTS  user (
               `username` VARCHAR(255) NOT NULL,
               `password` VARCHAR(255) NOT NULL,
               `email` VARCHAR(255) NOT NULL,
