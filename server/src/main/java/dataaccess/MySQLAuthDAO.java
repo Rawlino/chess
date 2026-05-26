@@ -25,7 +25,7 @@ public class MySQLAuthDAO implements AuthDAO {
 
     public AuthData getAuth(String authToken) throws DataAccessException {
         try (Connection conn = DatabaseManager.getConnection()) {
-            var statement = "SELECT authData, username FROM auth WHERE authToken=?";
+            var statement = "SELECT authToken, username FROM auth WHERE authToken=?";
             try (PreparedStatement ps = conn.prepareStatement(statement)) {
                 ps.setString(1, authToken);
                 try (ResultSet rs = ps.executeQuery()) {
