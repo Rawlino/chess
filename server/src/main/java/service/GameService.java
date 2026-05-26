@@ -7,7 +7,6 @@ import model.AuthData;
 import model.GameData;
 import dataaccess.DataAccessException;
 
-import javax.xml.crypto.Data;
 import java.util.Collection;
 
 public class GameService {
@@ -21,71 +20,59 @@ public class GameService {
     }
 
     public Collection<GameData> listGames(String authToken) throws DataAccessException {
-        try {
-            AuthData auth = authDAO.getAuth(authToken);
-            if (auth == null) {
-                throw new DataAccessException("Error: unauthorized");
-            } else {
-                return gameDAO.listGames();
-            }
-        } catch (DataAccessException e) {
-            throw new DataAccessException("Error: internal error");
+        AuthData auth = authDAO.getAuth(authToken);
+        if (auth == null) {
+            throw new DataAccessException("Error: unauthorized");
+        } else {
+            return gameDAO.listGames();
         }
     }
 
     public int createGame(String authToken, String gameName) throws DataAccessException {
-        try {
-            AuthData auth = authDAO.getAuth(authToken);
-            if (authToken == null) {
-                throw new DataAccessException("Error: bad request");
-            } else if (gameName == null) {
-                throw new DataAccessException("Error: bad request");
-            } else if (authToken.isEmpty()) {
-                throw new DataAccessException("Error: bad request");
-            } else if (gameName.isEmpty()) {
-                throw new DataAccessException("Error: bad request");
-            } else if (auth == null) {
-                throw new DataAccessException("Error: unauthorized");
-            } else {
-                ChessGame game = new ChessGame();
-                return gameDAO.createGame(null, null, gameName, game);
-            }
-        } catch (DataAccessException e) {
-            throw new DataAccessException("Error: internal error");
+        AuthData auth = authDAO.getAuth(authToken);
+        if (authToken == null) {
+            throw new DataAccessException("Error: bad request");
+        } else if (gameName == null) {
+            throw new DataAccessException("Error: bad request");
+        } else if (authToken.isEmpty()) {
+            throw new DataAccessException("Error: bad request");
+        } else if (gameName.isEmpty()) {
+            throw new DataAccessException("Error: bad request");
+        } else if (auth == null) {
+            throw new DataAccessException("Error: unauthorized");
+        } else {
+            ChessGame game = new ChessGame();
+            return gameDAO.createGame(null, null, gameName, game);
         }
     }
 
     public boolean joinGame(String authToken, String playerColor, int gameID) throws DataAccessException {
-        try {
-            AuthData auth = authDAO.getAuth(authToken);
-            GameData game = gameDAO.getGame(gameID);
-            if (authToken == null) {
-                throw new DataAccessException("Error: bad request");
-            } else if (playerColor == null) {
-                throw new DataAccessException("Error: bad request");
-            } else if (gameID <= 0) {
-                throw new DataAccessException("Error: bad request");
-            } else if (authToken.isEmpty()) {
-                throw new DataAccessException("Error: bad request");
-            } else if (playerColor.isEmpty()) {
-                throw new DataAccessException("Error: bad request");
-            } else if (auth == null) {
-                throw new DataAccessException("Error: unauthorized");
-            } else if (game == null) {
-                throw new DataAccessException("Error: bad request");
-            } else if ((playerColor.equals("WHITE") && game.whiteUsername() != null) || (playerColor.equals("BLACK") && game.blackUsername() != null)) {
-                throw new DataAccessException("Error: already taken");
-            } else if (playerColor.equals("WHITE")) {
-                gameDAO.updateGame(gameID, auth.username(), game.blackUsername(), game.gameName(), game.game());
-                return true;
-            } else if (playerColor.equals("BLACK")) {
-                gameDAO.updateGame(gameID, game.whiteUsername(), auth.username(), game.gameName(), game.game());
-                return true;
-            } else {
-                throw new DataAccessException("Error: bad request");
-            }
-        } catch (DataAccessException e) {
-            throw new DataAccessException("Error: internal error");
+        AuthData auth = authDAO.getAuth(authToken);
+        GameData game = gameDAO.getGame(gameID);
+        if (authToken == null) {
+            throw new DataAccessException("Error: bad request");
+        } else if (playerColor == null) {
+            throw new DataAccessException("Error: bad request");
+        } else if (gameID <= 0) {
+            throw new DataAccessException("Error: bad request");
+        } else if (authToken.isEmpty()) {
+            throw new DataAccessException("Error: bad request");
+        } else if (playerColor.isEmpty()) {
+            throw new DataAccessException("Error: bad request");
+        } else if (auth == null) {
+            throw new DataAccessException("Error: unauthorized");
+        } else if (game == null) {
+            throw new DataAccessException("Error: bad request");
+        } else if ((playerColor.equals("WHITE") && game.whiteUsername() != null) || (playerColor.equals("BLACK") && game.blackUsername() != null)) {
+            throw new DataAccessException("Error: already taken");
+        } else if (playerColor.equals("WHITE")) {
+            gameDAO.updateGame(gameID, auth.username(), game.blackUsername(), game.gameName(), game.game());
+            return true;
+        } else if (playerColor.equals("BLACK")) {
+            gameDAO.updateGame(gameID, game.whiteUsername(), auth.username(), game.gameName(), game.game());
+            return true;
+        } else {
+            throw new DataAccessException("Error: bad request");
         }
     }
 
