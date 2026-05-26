@@ -12,7 +12,7 @@ import static dataaccess.DatabaseManager.createDatabase;
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
 import static java.sql.Types.NULL;
 
-public class MySQLUserDAO {
+public class MySQLUserDAO implements UserDAO {
 
     public MySQLUserDAO() throws DataAccessException {
         configureDatabase();
@@ -20,7 +20,7 @@ public class MySQLUserDAO {
 
     public UserData createUser(String username, String password, String email) throws DataAccessException {
         String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
-        var statement = "INSERT INTO auth (username, password, email) VALUES (?, ?, ?)";
+        var statement = "INSERT INTO user (username, password, email) VALUES (?, ?, ?)";
         executeUpdate(statement, username, hashedPassword, email);
         return new UserData(username, hashedPassword, email);
     }

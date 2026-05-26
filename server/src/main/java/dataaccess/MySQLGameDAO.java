@@ -15,7 +15,7 @@ import static dataaccess.DatabaseManager.createDatabase;
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
 import static java.sql.Types.NULL;
 
-public class MySQLGameDAO {
+public class MySQLGameDAO implements GameDAO {
 
     public MySQLGameDAO() throws DataAccessException {
         configureDatabase();
@@ -23,7 +23,8 @@ public class MySQLGameDAO {
 
     public int createGame(String whiteUsername, String blackUsername, String gameName, ChessGame game)
             throws DataAccessException {
-        var statement = "INSERT INTO games (gameID, whiteUsername, blackUsername, gameName, game) VALUES (?, ?, ?, ?, ?)";
+        var statement = "INSERT INTO games (gameID, whiteUsername, blackUsername, gameName, game)" +
+                " VALUES (?, ?, ?, ?, ?)";
         String readableGame = new Gson().toJson(game);
         int gameID = executeUpdate(statement, whiteUsername, blackUsername, gameName, readableGame);
         return gameID;
@@ -66,7 +67,8 @@ public class MySQLGameDAO {
     public void updateGame(int gameID, String whiteUsername, String blackUsername, String gameName, ChessGame game)
             throws DataAccessException {
         try {
-            var statement = "UPDATE games (gameID, whiteUsername, blackUsername, gameName, game) SET (?, ?, ?, ?, ?) WHERE gameID = ?";
+            var statement = "UPDATE games (gameID, whiteUsername, blackUsername, gameName, game) SET (?, ?, ?, ?, ?)" +
+                    " WHERE gameID = ?";
             String readableGame = new Gson().toJson(game);
             executeUpdate(statement, gameID, whiteUsername, blackUsername, gameName, readableGame);
         } catch (Exception e) {
@@ -109,7 +111,8 @@ public class MySQLGameDAO {
                 return 0;
             }
         } catch (SQLException e) {
-            throw new DataAccessException(String.format("unable to update database: %s, %s", statement, e.getMessage()));
+            throw new DataAccessException(String.format("unable to update database: %s, %s", statement,
+                    e.getMessage()));
         }
     }
 

@@ -12,22 +12,26 @@ import io.javalin.http.Context;
 public class Server {
 
     private final Javalin javalin;
-    private final ClearHandler clearHandler;
-    private final UserHandler userHandler;
-    private final GameHandler gameHandler;
-    private final MemoryAuthDAO sharedAuthDAO;
-    private final MemoryGameDAO sharedGameDAO;
-    private final MemoryUserDAO sharedUserDAO;
+    private ClearHandler clearHandler;
+    private UserHandler userHandler;
+    private GameHandler gameHandler;
+    private MySQLAuthDAO mySQLAuthDAO;
+    private MySQLUserDAO mySQLUserDAO;
+    private MySQLGameDAO mySQLGameDAO;
 
     public Server() {
 
-        sharedAuthDAO = new MemoryAuthDAO();
-        sharedGameDAO = new MemoryGameDAO();
-        sharedUserDAO = new MemoryUserDAO();
+        try {
+            mySQLAuthDAO = new MySQLAuthDAO();
+            mySQLUserDAO = new MySQLUserDAO();
+            mySQLGameDAO = new MySQLGameDAO();
 
-        clearHandler = new ClearHandler(new ClearService(sharedUserDAO, sharedGameDAO, sharedAuthDAO));
-        userHandler = new UserHandler(new UserService(sharedAuthDAO, sharedUserDAO));
-        gameHandler = new GameHandler(new GameService(sharedGameDAO, sharedAuthDAO));
+            clearHandler = new ClearHandler(new ClearService(mySQLUserDAO, mySQLGameDAO, mySQLAuthDAO));
+            userHandler = new UserHandler(new UserService(mySQLAuthDAO, mySQLUserDAO));
+            gameHandler = new GameHandler(new GameService(mySQLGameDAO, mySQLAuthDAO));
+        } catch (DataAccessException ex) {
+            ex.printStackTrace();
+        }
 
         javalin = Javalin.create(config -> config.staticFiles.add("web"))
         // Register your endpoints and exception handlers here.

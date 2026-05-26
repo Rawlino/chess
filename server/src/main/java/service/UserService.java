@@ -53,7 +53,9 @@ public class UserService {
         } else if (user == null) {
             throw new DataAccessException("Error: unauthorized");
         } else if (user.password().startsWith("$2a$") || user.password().startsWith("$2b$") || user.password().startsWith("$2y$")) {
-            if (!BCrypt.checkpw(password, user.password())) {
+            if (BCrypt.checkpw(password, user.password())) {
+                return authDAO.createAuth(authToken, username);
+            } else {
                 throw new DataAccessException("Error: unauthorized");
             }
         } else if (!user.password().equals(password)) {
@@ -61,7 +63,6 @@ public class UserService {
         } else {
             return authDAO.createAuth(authToken, username);
         }
-        return null;
     }
 
     public boolean logout(String authToken) throws DataAccessException {
