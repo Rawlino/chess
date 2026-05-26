@@ -65,16 +65,10 @@ public class MySQLGameDAO {
 
     public void updateGame(int gameID, String whiteUsername, String blackUsername, String gameName, ChessGame game)
             throws DataAccessException {
-        try (Connection conn = DatabaseManager.getConnection()) {
-            var statement = "SELECT gameID, whiteUsername, blackUsername, gameName, game FROM games WHERE gameID=?";
-            try (PreparedStatement ps = conn.prepareStatement(statement)) {
-                ps.setInt(1, gameID);
-                try (ResultSet rs = ps.executeQuery()) {
-                    if (rs.next()) {
-
-                    }
-                }
-            }
+        try {
+            var statement = "UPDATE games (gameID, whiteUsername, blackUsername, gameName, game) SET (?, ?, ?, ?, ?) WHERE gameID = ?";
+            String readableGame = new Gson().toJson(game);
+            executeUpdate(statement, gameID, whiteUsername, blackUsername, gameName, readableGame);
         } catch (Exception e) {
             throw new DataAccessException(String.format("Unable to update data: %s", e.getMessage()));
         }
