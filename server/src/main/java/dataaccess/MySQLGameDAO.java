@@ -83,9 +83,9 @@ public class MySQLGameDAO implements GameDAO {
 
     private GameData readGame(ResultSet rs) throws SQLException {
         var gameID = rs.getInt("gameID");
-        var whiteUsername = rs.getString("username");
-        var blackUsername = rs.getString("password");
-        var gameName = rs.getString("email");
+        var whiteUsername = rs.getString("whiteUsername");
+        var blackUsername = rs.getString("blackUsername");
+        var gameName = rs.getString("gameName");
         var game = rs.getString("game");
         ChessGame chessGame = new Gson().fromJson(game, ChessGame.class);
         GameData gameData = new GameData(gameID, whiteUsername, blackUsername, gameName, chessGame);
