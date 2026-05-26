@@ -56,6 +56,9 @@ public class Server {
         } else if (ex.getMessage().contains("already taken")) {
             ctx.status(403);
             ctx.result(new Gson().toJson(new ErrorResponse(ex.getMessage())));
+        } else if (ex.getMessage().contains("internal error")) {
+            ctx.status(500);
+            ctx.result(new Gson().toJson(new ErrorResponse(ex.getMessage())));
         }
     }
 

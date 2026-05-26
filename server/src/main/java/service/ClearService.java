@@ -18,9 +18,14 @@ public class ClearService {
     }
 
     public void clearDB() throws DataAccessException {
-        userDAO.clear();
-        gameDAO.clear();
-        authDAO.clear();
+        try {
+            userDAO.clear();
+            gameDAO.clear();
+            authDAO.clear();
+        } catch (DataAccessException e) {
+            throw new DataAccessException("Error: internal error");
+        }
+
     }
 
 }
