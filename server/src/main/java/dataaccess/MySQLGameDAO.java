@@ -23,8 +23,8 @@ public class MySQLGameDAO implements GameDAO {
 
     public int createGame(String whiteUsername, String blackUsername, String gameName, ChessGame game)
             throws DataAccessException {
-        var statement = "INSERT INTO games (gameID, whiteUsername, blackUsername, gameName, game)" +
-                " VALUES (?, ?, ?, ?, ?)";
+        var statement = "INSERT INTO games (whiteUsername, blackUsername, gameName, game)" +
+                " VALUES (?, ?, ?, ?)";
         String readableGame = new Gson().toJson(game);
         int gameID = executeUpdate(statement, whiteUsername, blackUsername, gameName, readableGame);
         return gameID;
@@ -67,7 +67,7 @@ public class MySQLGameDAO implements GameDAO {
     public void updateGame(int gameID, String whiteUsername, String blackUsername, String gameName, ChessGame game)
             throws DataAccessException {
         try {
-            var statement = "UPDATE games (gameID, whiteUsername, blackUsername, gameName, game) SET (?, ?, ?, ?, ?)" +
+            var statement = "UPDATE games (whiteUsername, blackUsername, gameName, game) SET (?, ?, ?, ?)" +
                     " WHERE gameID = ?";
             String readableGame = new Gson().toJson(game);
             executeUpdate(statement, gameID, whiteUsername, blackUsername, gameName, readableGame);
@@ -116,13 +116,12 @@ public class MySQLGameDAO implements GameDAO {
         }
     }
 
-    //EDIT THIS TO MATCH NECESSARY TABLE FOR GAME
     private final String[] createStatements = {
             """
             CREATE TABLE IF NOT EXISTS  games (
               `gameID` int NOT NULL AUTO_INCREMENT,
-              `whiteUsername` VARCHAR(255) NOT NULL,
-              `blackUsername` VARCHAR(255) NOT NULL,
+              `whiteUsername` VARCHAR(255) DEFAULT NULL,
+              `blackUsername` VARCHAR(255) DEFAULT NULL,
               `gameName` VARCHAR(255) NOT NULL,
               `game` TEXT DEFAULT NULL,
               PRIMARY KEY (`gameID`)
