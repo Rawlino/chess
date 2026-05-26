@@ -23,56 +23,72 @@ public class MySQLGameDAO implements GameDAO {
 
     public int createGame(String whiteUsername, String blackUsername, String gameName, ChessGame game)
             throws DataAccessException {
-        var statement = "INSERT INTO games (whiteUsername, blackUsername, gameName, game)" +
-                " VALUES (?, ?, ?, ?)";
-        String readableGame = new Gson().toJson(game);
-        int gameID = executeUpdate(statement, whiteUsername, blackUsername, gameName, readableGame);
-        return gameID;
+        try {
+            var statement = "INSERT INTO games (whiteUsername, blackUsername, gameName, game)" +
+                    " VALUES (?, ?, ?, ?)";
+            String readableGame = new Gson().toJson(game);
+            int gameID = executeUpdate(statement, whiteUsername, blackUsername, gameName, readableGame);
+            return gameID;
+        } catch (DataAccessException e) {
+            throw new DataAccessException("Error: internal error");
+        }
     }
 
     public GameData getGame(int gameID) throws DataAccessException {
-        try (Connection conn = DatabaseManager.getConnection()) {
-            var statement = "SELECT gameID, whiteUsername, blackUsername, gameName, game FROM games WHERE gameID=?";
-            try (PreparedStatement ps = conn.prepareStatement(statement)) {
-                ps.setInt(1, gameID);
-                try (ResultSet rs = ps.executeQuery()) {
-                    if (rs.next()) {
-                        return readGame(rs);
+        try {
+            try (Connection conn = DatabaseManager.getConnection()) {
+                var statement = "SELECT gameID, whiteUsername, blackUsername, gameName, game FROM games WHERE gameID=?";
+                try (PreparedStatement ps = conn.prepareStatement(statement)) {
+                    ps.setInt(1, gameID);
+                    try (ResultSet rs = ps.executeQuery()) {
+                        if (rs.next()) {
+                            return readGame(rs);
+                        }
                     }
                 }
+            } catch (Exception e) {
+                throw new DataAccessException(String.format("Unable to read data: %s", e.getMessage()));
             }
-        } catch (Exception e) {
-            throw new DataAccessException(String.format("Unable to read data: %s", e.getMessage()));
+            return null;
+        } catch (DataAccessException e) {
+            throw new DataAccessException("Error: internal error");
         }
-        return null;
     }
 
     public Collection<GameData> listGames() throws DataAccessException {
-        var result = new ArrayList<GameData>();
-        try (Connection conn = DatabaseManager.getConnection()) {
-            var statement = "SELECT gameID, whiteUsername, blackUsername, gameName, game FROM games";
-            try (PreparedStatement ps = conn.prepareStatement(statement)) {
-                try (ResultSet rs = ps.executeQuery()) {
-                    while (rs.next()) {
-                        result.add(readGame(rs));
+        try {
+            var result = new ArrayList<GameData>();
+            try (Connection conn = DatabaseManager.getConnection()) {
+                var statement = "SELECT gameID, whiteUsername, blackUsername, gameName, game FROM games";
+                try (PreparedStatement ps = conn.prepareStatement(statement)) {
+                    try (ResultSet rs = ps.executeQuery()) {
+                        while (rs.next()) {
+                            result.add(readGame(rs));
+                        }
                     }
                 }
+            } catch (Exception e) {
+                throw new DataAccessException(String.format("Unable to read data: %s", e.getMessage()));
             }
-        } catch (Exception e) {
-            throw new DataAccessException(String.format("Unable to read data: %s", e.getMessage()));
+            return result;
+        } catch (DataAccessException e) {
+            throw new DataAccessException("Error: internal error");
         }
-        return result;
     }
 
     public void updateGame(int gameID, String whiteUsername, String blackUsername, String gameName, ChessGame game)
             throws DataAccessException {
         try {
-            var statement = "UPDATE games SET whiteUsername=?, blackUsername=?, gameName=?, game=?" +
-                    " WHERE gameID=?";
-            String readableGame = new Gson().toJson(game);
-            executeUpdate(statement, whiteUsername, blackUsername, gameName, readableGame, gameID);
-        } catch (Exception e) {
-            throw new DataAccessException(String.format("Unable to update data: %s", e.getMessage()));
+            try {
+                var statement = "UPDATE games SET whiteUsername=?, blackUsername=?, gameName=?, game=?" +
+                        " WHERE gameID=?";
+                String readableGame = new Gson().toJson(game);
+                executeUpdate(statement, whiteUsername, blackUsername, gameName, readableGame, gameID);
+            } catch (Exception e) {
+                throw new DataAccessException(String.format("Unable to update data: %s", e.getMessage()));
+            }
+        } catch (DataAccessException e) {
+            throw new DataAccessException("Error: internal error");
         }
     }
 

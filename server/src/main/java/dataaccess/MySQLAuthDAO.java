@@ -18,26 +18,34 @@ public class MySQLAuthDAO implements AuthDAO {
     }
 
     public AuthData createAuth(String authToken, String username) throws DataAccessException {
-        var statement = "INSERT INTO auth (authToken, username) VALUES (?, ?)";
-        executeUpdate(statement, authToken, username);
-        return new AuthData(authToken, username);
+        try {
+            var statement = "INSERT INTO auth (authToken, username) VALUES (?, ?)";
+            executeUpdate(statement, authToken, username);
+            return new AuthData(authToken, username);
+        } catch (DataAccessException e) {
+            throw new DataAccessException("Error: internal error");
+        }
     }
 
     public AuthData getAuth(String authToken) throws DataAccessException {
-        try (Connection conn = DatabaseManager.getConnection()) {
-            var statement = "SELECT authToken, username FROM auth WHERE authToken=?";
-            try (PreparedStatement ps = conn.prepareStatement(statement)) {
-                ps.setString(1, authToken);
-                try (ResultSet rs = ps.executeQuery()) {
-                    if (rs.next()) {
-                        return readAuth(rs);
+        try {
+            try (Connection conn = DatabaseManager.getConnection()) {
+                var statement = "SELECT authToken, username FROM auth WHERE authToken=?";
+                try (PreparedStatement ps = conn.prepareStatement(statement)) {
+                    ps.setString(1, authToken);
+                    try (ResultSet rs = ps.executeQuery()) {
+                        if (rs.next()) {
+                            return readAuth(rs);
+                        }
                     }
                 }
+            } catch (Exception e) {
+                throw new DataAccessException(String.format("Unable to read data: %s", e.getMessage()));
             }
-        } catch (Exception e) {
-            throw new DataAccessException(String.format("Unable to read data: %s", e.getMessage()));
+            return null;
+        } catch (DataAccessException e) {
+            throw new DataAccessException("Error: internal error");
         }
-        return null;
     }
 
     private AuthData readAuth(ResultSet rs) throws SQLException {
@@ -48,8 +56,12 @@ public class MySQLAuthDAO implements AuthDAO {
     }
 
     public void deleteAuth(String authToken) throws DataAccessException {
-        var statement = "DELETE FROM auth WHERE authToken=?";
-        executeUpdate(statement, authToken);
+        try {
+            var statement = "DELETE FROM auth WHERE authToken=?";
+            executeUpdate(statement, authToken);
+        } catch (DataAccessException e) {
+            throw new DataAccessException("Error: internal error");
+        }
     }
 
     public void clear() throws DataAccessException {

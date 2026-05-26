@@ -19,27 +19,35 @@ public class MySQLUserDAO implements UserDAO {
     }
 
     public UserData createUser(String username, String password, String email) throws DataAccessException {
-        String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
-        var statement = "INSERT INTO user (username, password, email) VALUES (?, ?, ?)";
-        executeUpdate(statement, username, hashedPassword, email);
-        return new UserData(username, hashedPassword, email);
+        try {
+            String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
+            var statement = "INSERT INTO user (username, password, email) VALUES (?, ?, ?)";
+            executeUpdate(statement, username, hashedPassword, email);
+            return new UserData(username, hashedPassword, email);
+        } catch (DataAccessException e) {
+            throw new DataAccessException("Error: internal error");
+        }
     }
 
     public UserData getUser(String username) throws DataAccessException {
-        try (Connection conn = DatabaseManager.getConnection()) {
-            var statement = "SELECT username, password, email FROM user WHERE username=?";
-            try (PreparedStatement ps = conn.prepareStatement(statement)) {
-                ps.setString(1, username);
-                try (ResultSet rs = ps.executeQuery()) {
-                    if (rs.next()) {
-                        return readUser(rs);
+        try {
+            try (Connection conn = DatabaseManager.getConnection()) {
+                var statement = "SELECT username, password, email FROM user WHERE username=?";
+                try (PreparedStatement ps = conn.prepareStatement(statement)) {
+                    ps.setString(1, username);
+                    try (ResultSet rs = ps.executeQuery()) {
+                        if (rs.next()) {
+                            return readUser(rs);
+                        }
                     }
                 }
+            } catch (Exception e) {
+                throw new DataAccessException(String.format("Unable to read data: %s", e.getMessage()));
             }
-        } catch (Exception e) {
-            throw new DataAccessException(String.format("Unable to read data: %s", e.getMessage()));
+            return null;
+        } catch (DataAccessException e) {
+            throw new DataAccessException("Error: internal error");
         }
-        return null;
     }
 
     public void clear() throws DataAccessException {
