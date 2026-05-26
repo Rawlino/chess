@@ -1,36 +1,72 @@
 package dataaccess;
 
+import model.AuthData;
+import model.UserData;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import javax.xml.crypto.Data;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class MySQLAuthDAOTest {
 
-    @Test
-    void createAuth() {
+    private MySQLAuthDAO mySQLAuthDAO;
+    private MySQLUserDAO mySQLUserDAO;
+    private String authToken = UUID.randomUUID().toString();
+
+    @BeforeEach
+    void setup() throws DataAccessException {
+        mySQLAuthDAO = new MySQLAuthDAO();
+        mySQLUserDAO = new MySQLUserDAO();
+
+        mySQLUserDAO.clear();
+        mySQLAuthDAO.clear();
+
+        mySQLUserDAO.createUser("butt", "butt", "butt@mail");
     }
 
     @Test
-    void getAuth() {
+    void createAuth() throws DataAccessException {
+        AuthData auth = mySQLAuthDAO.createAuth(authToken, "butt");
+        assertEquals(auth, mySQLAuthDAO.getAuth(authToken));
     }
 
     @Test
-    void deleteAuth() {
+    void getAuth() throws DataAccessException {
+        AuthData auth = mySQLAuthDAO.createAuth(authToken, "butt");
+        assertNotNull(mySQLAuthDAO.getAuth(auth.authToken()));
     }
 
     @Test
-    void negativeCreateAuth() {
+    void deleteAuth() throws DataAccessException {
+        AuthData auth = mySQLAuthDAO.createAuth(authToken, "butt");
+        mySQLAuthDAO.deleteAuth(auth.authToken());
+        assertNotEquals(authToken, mySQLAuthDAO.getAuth(auth.authToken()));
     }
 
     @Test
-    void negativeGetAuth() {
+    void negativeCreateAuth() throws DataAccessException {
+        assertThrows(DataAccessException.class , () -> mySQLAuthDAO.createAuth(authToken, null));
     }
 
     @Test
-    void negativeDeleteAuth() {
+    void negativeGetAuth() throws DataAccessException {
+        assertNull(mySQLAuthDAO.getAuth("NullNull"));
     }
 
     @Test
-    void clear() {
+    void negativeDeleteAuth() throws DataAccessException {
+        AuthData auth = mySQLAuthDAO.createAuth(authToken, "butt");
+        mySQLAuthDAO.deleteAuth("wawa");
+        assertNotNull(auth.authToken());
+    }
+
+    @Test
+    void positiveClear() throws DataAccessException {
+        AuthData auth = mySQLAuthDAO.createAuth(authToken, "butt");
+        mySQLAuthDAO.clear();
+        assertNull(mySQLAuthDAO.getAuth(authToken));
     }
 }
