@@ -111,7 +111,7 @@ public class MySQLGameDAO implements GameDAO {
         return gameData;
     }
 
-    private final String[] createStatements = {
+    private final String[] gameCreateStatements = {
             """
             CREATE TABLE IF NOT EXISTS  games (
               `gameID` int NOT NULL AUTO_INCREMENT,
@@ -128,7 +128,7 @@ public class MySQLGameDAO implements GameDAO {
     private void configureDatabase() throws DataAccessException {
         createDatabase();
         try (Connection conn = DatabaseManager.getConnection()) {
-            for (String statement : createStatements) {
+            for (String statement : gameCreateStatements) {
                 try (var preparedStatement = conn.prepareStatement(statement)) {
                     preparedStatement.executeUpdate();
                 }

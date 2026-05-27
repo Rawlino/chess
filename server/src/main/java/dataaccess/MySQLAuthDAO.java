@@ -70,29 +70,7 @@ public class MySQLAuthDAO implements AuthDAO {
         executeUpdate(statement);
     }
 
-    private int executeUpdate(String statement, Object... params) throws DataAccessException {
-        try (Connection conn = DatabaseManager.getConnection()) {
-            try (PreparedStatement ps = conn.prepareStatement(statement, RETURN_GENERATED_KEYS)) {
-                for (int i = 0; i < params.length; i++) {
-                    Object param = params[i];
-                    extracted(param, ps, i);
-                }
-                ps.executeUpdate();
-
-                ResultSet rs = ps.getGeneratedKeys();
-                if (rs.next()) {
-                    return rs.getInt(1);
-                }
-
-                return 0;
-            }
-        } catch (SQLException e) {
-            extracted(String.format("unable to update database: %s, %s", statement, e.getMessage()));
-            return 0;
-        }
-    }
-
-    private final String[] createStatements = {
+    private final String[] authCreateStatements = {
             """
             CREATE TABLE IF NOT EXISTS  auth (
               `authToken` VARCHAR(255) NOT NULL,
@@ -106,7 +84,7 @@ public class MySQLAuthDAO implements AuthDAO {
     private void configureDatabase() throws DataAccessException {
         createDatabase();
         try (Connection conn = DatabaseManager.getConnection()) {
-            for (String statement : createStatements) {
+            for (String statement : authCreateStatements) {
                 try (var preparedStatement = conn.prepareStatement(statement)) {
                     preparedStatement.executeUpdate();
                 }
