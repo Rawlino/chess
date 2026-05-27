@@ -7,9 +7,7 @@ import java.sql.*;
 
 import static dataaccess.DatabaseManager.createDatabase;
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
-import static java.sql.Types.NULL;
-
-import dataaccess.DataAccessException;
+import static dataaccess.MySQLUserDAO.*;
 
 public class MySQLAuthDAO implements AuthDAO {
 
@@ -91,20 +89,6 @@ public class MySQLAuthDAO implements AuthDAO {
         } catch (SQLException e) {
             extracted(String.format("unable to update database: %s, %s", statement, e.getMessage()));
             return 0;
-        }
-    }
-
-    private static void extracted(String statement) throws DataAccessException {
-        throw new DataAccessException(statement);
-    }
-
-    private static void extracted(Object param, PreparedStatement ps, int i) throws SQLException {
-        switch (param) {
-            case String p -> ps.setString(i + 1, p);
-            case Integer p -> ps.setInt(i + 1, p);
-            case null -> ps.setNull(i + 1, NULL);
-            default -> {
-            }
         }
     }
 

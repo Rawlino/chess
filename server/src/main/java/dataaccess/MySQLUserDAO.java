@@ -25,7 +25,8 @@ public class MySQLUserDAO implements UserDAO {
             executeUpdate(statement, username, hashedPassword, email);
             return new UserData(username, hashedPassword, email);
         } catch (DataAccessException e) {
-            throw new DataAccessException("Error: internal error");
+            extracted("Error: internal error");
+            return null;
         }
     }
 
@@ -42,11 +43,12 @@ public class MySQLUserDAO implements UserDAO {
                     }
                 }
             } catch (Exception e) {
-                throw new DataAccessException(String.format("Unable to read data: %s", e.getMessage()));
+                extracted(String.format("Unable to read data: %s", e.getMessage()));
             }
             return null;
         } catch (DataAccessException e) {
-            throw new DataAccessException("Error: internal error");
+            extracted("Error: internal error");
+            return null;
         }
     }
 
@@ -63,7 +65,7 @@ public class MySQLUserDAO implements UserDAO {
         return userData;
     }
 
-    private int executeUpdate(String statement, Object... params) throws DataAccessException {
+    public static int executeUpdate(String statement, Object... params) throws DataAccessException {
         try (Connection conn = DatabaseManager.getConnection()) {
             try (PreparedStatement ps = conn.prepareStatement(statement, RETURN_GENERATED_KEYS)) {
                 for (int i = 0; i < params.length; i++) {
@@ -80,11 +82,16 @@ public class MySQLUserDAO implements UserDAO {
                 return 0;
             }
         } catch (SQLException e) {
-            throw new DataAccessException(String.format("unable to update database: %s, %s", statement, e.getMessage()));
+            extracted(String.format("unable to update database: %s, %s", statement, e.getMessage()));
+            return 0;
         }
     }
 
-    private static void extracted(Object param, PreparedStatement ps, int i) throws SQLException {
+    public static void extracted(String statement) throws DataAccessException {
+        throw new DataAccessException(statement);
+    }
+
+    public static void extracted(Object param, PreparedStatement ps, int i) throws SQLException {
         switch (param) {
             case String p -> ps.setString(i + 1, p);
             case Integer p -> ps.setInt(i + 1, p);
@@ -115,7 +122,7 @@ public class MySQLUserDAO implements UserDAO {
                 }
             }
         } catch (SQLException ex) {
-            throw new DataAccessException(String.format("Unable to configure database: %s", ex.getMessage()));
+            extracted(String.format("Unable to configure database: %s", ex.getMessage()));
         }
     }
 }
