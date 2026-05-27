@@ -2,6 +2,7 @@ package dataaccess;
 
 import java.sql.Connection;
 import model.*;
+import org.jetbrains.annotations.Nullable;
 
 import java.sql.*;
 
@@ -29,14 +30,9 @@ public class MySQLAuthDAO implements AuthDAO {
     public AuthData getAuth(String authToken) throws DataAccessException {
         try {
             try (Connection conn = DatabaseManager.getConnection()) {
-                var statement = "SELECT authToken, username FROM auth WHERE authToken=?";
-                try (PreparedStatement ps = conn.prepareStatement(statement)) {
-                    ps.setString(1, authToken);
-                    try (ResultSet rs = ps.executeQuery()) {
-                        if (rs.next()) {
-                            return readAuth(rs);
-                        }
-                    }
+                AuthData rs = getAuthData(authToken, conn);
+                if (rs != null) {
+                    return rs;
                 }
             } catch (Exception e) {
                 extracted(String.format("Unable to read data: %s", e.getMessage()));
@@ -47,6 +43,20 @@ public class MySQLAuthDAO implements AuthDAO {
             extracted("Error: internal error");
             return null;
         }
+    }
+
+    @Nullable
+    private AuthData getAuthData(String authToken, Connection conn) throws SQLException {
+        var statement = "SELECT authToken, username FROM auth WHERE authToken=?";
+        try (PreparedStatement ps = conn.prepareStatement(statement)) {
+            ps.setString(1, authToken);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return readAuth(rs);
+                }
+            }
+        }
+        return null;
     }
 
     private AuthData readAuth(ResultSet rs) throws SQLException {

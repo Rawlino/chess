@@ -1,6 +1,7 @@
 package dataaccess;
 
 import model.UserData;
+import org.jetbrains.annotations.Nullable;
 import org.mindrot.jbcrypt.BCrypt;
 
 import java.sql.Connection;
@@ -33,14 +34,9 @@ public class MySQLUserDAO implements UserDAO {
     public UserData getUser(String username) throws DataAccessException {
         try {
             try (Connection conn = DatabaseManager.getConnection()) {
-                var statement = "SELECT username, password, email FROM user WHERE username=?";
-                try (PreparedStatement ps = conn.prepareStatement(statement)) {
-                    ps.setString(1, username);
-                    try (ResultSet rs = ps.executeQuery()) {
-                        if (rs.next()) {
-                            return readUser(rs);
-                        }
-                    }
+                UserData rs = getUserData(username, conn);
+                if (rs != null) {
+                    return rs;
                 }
             } catch (Exception e) {
                 extracted(String.format("Unable to read data: %s", e.getMessage()));
@@ -50,6 +46,20 @@ public class MySQLUserDAO implements UserDAO {
             extracted("Error: internal error");
             return null;
         }
+    }
+
+    @Nullable
+    private UserData getUserData(String username, Connection conn) throws SQLException {
+        var statement = "SELECT username, password, email FROM user WHERE username=?";
+        try (PreparedStatement ps = conn.prepareStatement(statement)) {
+            ps.setString(1, username);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return readUser(rs);
+                }
+            }
+        }
+        return null;
     }
 
     public void clear() throws DataAccessException {

@@ -3,6 +3,7 @@ package dataaccess;
 import chess.ChessGame;
 import com.google.gson.Gson;
 import model.GameData;
+import org.jetbrains.annotations.Nullable;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -37,14 +38,9 @@ public class MySQLGameDAO implements GameDAO {
     public GameData getGame(int gameID) throws DataAccessException {
         try {
             try (Connection conn = DatabaseManager.getConnection()) {
-                var statement = "SELECT gameID, whiteUsername, blackUsername, gameName, game FROM games WHERE gameID=?";
-                try (PreparedStatement ps = conn.prepareStatement(statement)) {
-                    ps.setInt(1, gameID);
-                    try (ResultSet rs = ps.executeQuery()) {
-                        if (rs.next()) {
-                            return readGame(rs);
-                        }
-                    }
+                GameData rs = getGameData(gameID, conn);
+                if (rs != null) {
+                    return rs;
                 }
             } catch (Exception e) {
                 extracted(String.format("Unable to read data: %s", e.getMessage()));
@@ -56,18 +52,25 @@ public class MySQLGameDAO implements GameDAO {
         }
     }
 
+    @Nullable
+    private GameData getGameData(int gameID, Connection conn) throws SQLException {
+        var statement = "SELECT gameID, whiteUsername, blackUsername, gameName, game FROM games WHERE gameID=?";
+        try (PreparedStatement ps = conn.prepareStatement(statement)) {
+            ps.setInt(1, gameID);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return readGame(rs);
+                }
+            }
+        }
+        return null;
+    }
+
     public Collection<GameData> listGames() throws DataAccessException {
         try {
             var result = new ArrayList<GameData>();
             try (Connection conn = DatabaseManager.getConnection()) {
-                var statement = "SELECT gameID, whiteUsername, blackUsername, gameName, game FROM games";
-                try (PreparedStatement ps = conn.prepareStatement(statement)) {
-                    try (ResultSet rs = ps.executeQuery()) {
-                        while (rs.next()) {
-                            result.add(readGame(rs));
-                        }
-                    }
-                }
+                extractedSQL(conn, result);
             } catch (Exception e) {
                 extracted(String.format("Unable to read data: %s", e.getMessage()));
                 return null;
@@ -76,6 +79,17 @@ public class MySQLGameDAO implements GameDAO {
         } catch (DataAccessException e) {
             extracted("Error: internal error");
             return null;
+        }
+    }
+
+    private void extractedSQL(Connection conn, ArrayList<GameData> result) throws SQLException {
+        var statement = "SELECT gameID, whiteUsername, blackUsername, gameName, game FROM games";
+        try (PreparedStatement ps = conn.prepareStatement(statement)) {
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    result.add(readGame(rs));
+                }
+            }
         }
     }
 
