@@ -30,7 +30,8 @@ public class MySQLGameDAO implements GameDAO {
             int gameID = executeUpdate(statement, whiteUsername, blackUsername, gameName, readableGame);
             return gameID;
         } catch (DataAccessException e) {
-            throw new DataAccessException("Error: internal error");
+            extracted("Error: internal error");
+            return 0;
         }
     }
 
@@ -47,11 +48,12 @@ public class MySQLGameDAO implements GameDAO {
                     }
                 }
             } catch (Exception e) {
-                throw new DataAccessException(String.format("Unable to read data: %s", e.getMessage()));
+                extracted(String.format("Unable to read data: %s", e.getMessage()));
             }
             return null;
         } catch (DataAccessException e) {
-            throw new DataAccessException("Error: internal error");
+            extracted("Error: internal error");
+            return null;
         }
     }
 
@@ -68,11 +70,13 @@ public class MySQLGameDAO implements GameDAO {
                     }
                 }
             } catch (Exception e) {
-                throw new DataAccessException(String.format("Unable to read data: %s", e.getMessage()));
+                extracted(String.format("Unable to read data: %s", e.getMessage()));
+                return null;
             }
             return result;
         } catch (DataAccessException e) {
-            throw new DataAccessException("Error: internal error");
+            extracted("Error: internal error");
+            return null;
         }
     }
 
@@ -85,10 +89,10 @@ public class MySQLGameDAO implements GameDAO {
                 String readableGame = new Gson().toJson(game);
                 executeUpdate(statement, whiteUsername, blackUsername, gameName, readableGame, gameID);
             } catch (Exception e) {
-                throw new DataAccessException(String.format("Unable to update data: %s", e.getMessage()));
+                extracted(String.format("Unable to update data: %s", e.getMessage()));
             }
         } catch (DataAccessException e) {
-            throw new DataAccessException("Error: internal error");
+            extracted("Error: internal error");
         }
     }
 
@@ -125,9 +129,14 @@ public class MySQLGameDAO implements GameDAO {
                 return 0;
             }
         } catch (SQLException e) {
-            throw new DataAccessException(String.format("unable to update database: %s, %s", statement,
+            extracted(String.format("unable to update database: %s, %s", statement,
                     e.getMessage()));
+            return 0;
         }
+    }
+
+    private static void extracted(String statement) throws DataAccessException {
+        throw new DataAccessException(statement);
     }
 
     private static void extracted(Object param, PreparedStatement ps, int i) throws SQLException {
@@ -163,7 +172,7 @@ public class MySQLGameDAO implements GameDAO {
                 }
             }
         } catch (SQLException ex) {
-            throw new DataAccessException(String.format("Unable to configure database: %s", ex.getMessage()));
+            extracted(String.format("Unable to configure database: %s", ex.getMessage()));
         }
     }
 

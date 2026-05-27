@@ -23,7 +23,8 @@ public class MySQLAuthDAO implements AuthDAO {
             executeUpdate(statement, authToken, username);
             return new AuthData(authToken, username);
         } catch (DataAccessException e) {
-            throw new DataAccessException("Error: internal error");
+            extracted("Error: internal error");
+            return null;
         }
     }
 
@@ -40,11 +41,13 @@ public class MySQLAuthDAO implements AuthDAO {
                     }
                 }
             } catch (Exception e) {
-                throw new DataAccessException(String.format("Unable to read data: %s", e.getMessage()));
+                extracted(String.format("Unable to read data: %s", e.getMessage()));
+                return null;
             }
             return null;
         } catch (DataAccessException e) {
-            throw new DataAccessException("Error: internal error");
+            extracted("Error: internal error");
+            return null;
         }
     }
 
@@ -60,7 +63,7 @@ public class MySQLAuthDAO implements AuthDAO {
             var statement = "DELETE FROM auth WHERE authToken=?";
             executeUpdate(statement, authToken);
         } catch (DataAccessException e) {
-            throw new DataAccessException("Error: internal error");
+            extracted("Error: internal error");
         }
     }
 
@@ -86,8 +89,13 @@ public class MySQLAuthDAO implements AuthDAO {
                 return 0;
             }
         } catch (SQLException e) {
-            throw new DataAccessException(String.format("unable to update database: %s, %s", statement, e.getMessage()));
+            extracted(String.format("unable to update database: %s, %s", statement, e.getMessage()));
+            return 0;
         }
+    }
+
+    private static void extracted(String statement) throws DataAccessException {
+        throw new DataAccessException(statement);
     }
 
     private static void extracted(Object param, PreparedStatement ps, int i) throws SQLException {
@@ -120,7 +128,7 @@ public class MySQLAuthDAO implements AuthDAO {
                 }
             }
         } catch (SQLException ex) {
-            throw new DataAccessException(String.format("Unable to configure database: %s", ex.getMessage()));
+            extracted(String.format("Unable to configure database: %s", ex.getMessage()));
         }
     }
 
