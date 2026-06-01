@@ -28,7 +28,8 @@ public class LoggedInREPL {
                 result = eval(line);
                 if (result.equals("LOGGED_OUT")) {
                     return "LOGGED_OUT";
-                } else if (result.equals("IN_GAME")) {
+                }
+                if (result.equals("IN_GAME")) {
                     return "IN_GAME";
                 }
                 System.out.print(result);
@@ -51,27 +52,25 @@ public class LoggedInREPL {
         String[] params = Arrays.copyOfRange(tokens, 1, tokens.length);
         return switch (cmd) {
             case "help" -> help();
-            case "logout" -> logOut();
+            case "logout" -> logOut(params);
             case "create" -> "create selected";
             case "list" -> "list selected";
-            case "play" -> "play selected";
+            case "play" -> play(params);
             case "observe" -> "observe selected";
             default -> "Unknown command. To list available commands, type 'help'";
         };
     }
 
     public String play(String... params) throws DataAccessException {
-        if (params.length >= 1) {
-            user = String.join("-", params);
-            return "LOGGED_OUT";
+        if (params.length == 2) {
+            return "IN_GAME";
         }
-        throw new DataAccessException("Expected: play <gameID> <teamColo>");
+        throw new DataAccessException("Expected: play <gameID> <teamColor>");
     }
 
     public String logOut(String... params) throws DataAccessException {
-        if (params.length >= 1) {
-            user = String.join("-", params);
-            System.out.print(String.format("Thank you %s. Have a great day\n", user));
+        if (params.length == 0) {
+            System.out.print("Thank you. Have a great day\n");
             return "LOGGED_OUT";
         }
         throw new DataAccessException("Expected: logout");

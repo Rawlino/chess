@@ -1,6 +1,7 @@
 package client;
 
 import chess.*;
+import repl.InGameREPL;
 import repl.LoggedInREPL;
 import repl.LoggedOutREPL;
 import server.ServerFacade;
@@ -21,7 +22,7 @@ public class ClientMain {
                 } else if (result.equals("LOGGED_IN")) {
                     result = new LoggedInREPL(sharedServerFacade).run();
                 } else if (result.equals("IN_GAME")) {
-                    result = new LoggedInREPL(sharedServerFacade).run();
+                    result = new InGameREPL(sharedServerFacade).run();
                 }
             }
         } catch (Throwable ex) {

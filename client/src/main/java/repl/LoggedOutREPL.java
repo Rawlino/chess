@@ -34,6 +34,8 @@ public class LoggedOutREPL {
                 result = eval(line);
                 if (result.equals("LOGGED_IN")) {
                     return "LOGGED_IN";
+                } else if (result.equals("QUIT")) {
+                    return "QUIT";
                 }
                 System.out.print(result);
             } catch (Throwable e) {
@@ -57,18 +59,27 @@ public class LoggedOutREPL {
             case "help" -> help();
             case "login" -> logIn(params);
             case "register" -> "register selected";
-            case "quit" -> "quit selected";
+            case "quit" -> quit(params);
             default -> "Unknown command. To list available commands, type 'help'";
         };
     }
 
     public String logIn(String... params) throws DataAccessException {
-        if (params.length >= 1) {
-            user = String.join("-", params);
+        if (params.length == 2) {
+            user = params[0];
+            String password = params[1];
             System.out.print(String.format("You signed in as %s.\n", user));
             return "LOGGED_IN";
         }
-        throw new DataAccessException("Expected: login <username>");
+        throw new DataAccessException("Expected: login <username> <password>");
+    }
+
+    public String quit(String... params) throws DataAccessException {
+        if (params.length == 0) {
+            System.out.print("Thank you for joining us.");
+            return "QUIT";
+        }
+        throw new DataAccessException("Expected: quit");
     }
 
     public String help() {

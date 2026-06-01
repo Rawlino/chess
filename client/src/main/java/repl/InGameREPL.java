@@ -49,9 +49,16 @@ public class InGameREPL {
         String[] params = Arrays.copyOfRange(tokens, 1, tokens.length);
         return switch (cmd) {
             case "help" -> help();
-            case "leave" -> "leave selected";
+            case "leave" -> leave(params);
             default -> "Unknown command. To list available commands, type 'help'";
         };
+    }
+
+    public String leave(String... params) throws DataAccessException {
+        if (params.length == 0) {
+            return "LOGGED_IN";
+        }
+        throw new DataAccessException("Expected: leave");
     }
 
     public String help() {
