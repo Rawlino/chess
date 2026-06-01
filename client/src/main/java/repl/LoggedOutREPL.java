@@ -8,6 +8,8 @@ import dataaccess.DataAccessException;
 import model.*;
 import server.ServerFacade;
 
+import javax.xml.crypto.Data;
+
 import static ui.EscapeSequences.*;
 
 public class LoggedOutREPL {
@@ -18,7 +20,7 @@ public class LoggedOutREPL {
         serverFacade = sharedServerFacade;
     }
 
-    public void run() {
+    public String run() {
         System.out.println("♕ 240 Chess Client:");
         System.out.print(help());
 
@@ -30,6 +32,9 @@ public class LoggedOutREPL {
 
             try {
                 result = eval(line);
+                if (result.equals("LOGGED_IN")) {
+                    return "LOGGED_IN";
+                }
                 System.out.print(result);
             } catch (Throwable e) {
                 var msg = e.toString();
@@ -37,6 +42,7 @@ public class LoggedOutREPL {
             }
         }
         System.out.println();
+        return "";
     }
 
     private void printPrompt() {
@@ -49,11 +55,20 @@ public class LoggedOutREPL {
         String[] params = Arrays.copyOfRange(tokens, 1, tokens.length);
         return switch (cmd) {
             case "help" -> help();
-            case "login" -> "login selected";
+            case "login" -> logIn(params);
             case "register" -> "register selected";
             case "quit" -> "quit selected";
             default -> "Unknown command. To list available commands, type 'help'";
         };
+    }
+
+    public String logIn(String... params) throws DataAccessException {
+        if (params.length >= 1) {
+            user = String.join("-", params);
+            System.out.print(String.format("You signed in as %s.\n", user));
+            return "LOGGED_IN";
+        }
+        throw new DataAccessException("Expected: <yourname>");
     }
 
     public String help() {
