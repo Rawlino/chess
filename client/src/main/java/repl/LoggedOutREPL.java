@@ -5,6 +5,7 @@ import java.util.Scanner;
 
 import com.google.gson.Gson;
 import dataaccess.DataAccessException;
+import dataaccess.MySQLUserDAO;
 import model.*;
 import server.ServerFacade;
 
@@ -68,6 +69,8 @@ public class LoggedOutREPL {
         if (params.length == 2) {
             user = params[0];
             String password = params[1];
+            UserData userData = new UserData(user, password, null);
+            serverFacade.login(userData);
             System.out.print(String.format("You signed in as %s.\n", user));
             return "LOGGED_IN";
         }
