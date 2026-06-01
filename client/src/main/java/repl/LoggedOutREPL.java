@@ -58,7 +58,7 @@ public class LoggedOutREPL {
         return switch (cmd) {
             case "help" -> help();
             case "login" -> logIn(params);
-            case "register" -> "register selected";
+            case "register" -> register(params);
             case "quit" -> quit(params);
             default -> "Unknown command. To list available commands, type 'help'";
         };
@@ -72,6 +72,19 @@ public class LoggedOutREPL {
             return "LOGGED_IN";
         }
         throw new DataAccessException("Expected: login <username> <password>");
+    }
+
+    public String register(String... params) throws DataAccessException {
+        if (params.length == 3) {
+            user = params[0];
+            String password = params[1];
+            String email = params[2];
+            UserData userData = new UserData(user, password, email);
+            AuthData authData = serverFacade.register(userData);
+            System.out.print(String.format("Thank you for registering %s.\n", user));
+            return "LOGGED_IN";
+        }
+        throw new DataAccessException("Expected: login <username> <password> <email>");
     }
 
     public String quit(String... params) throws DataAccessException {

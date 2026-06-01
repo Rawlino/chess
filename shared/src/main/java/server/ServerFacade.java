@@ -18,6 +18,12 @@ public class ServerFacade {
         serverUrl = url;
     }
 
+    public AuthData register(UserData userData) throws DataAccessException {
+        var request = buildRequest("POST", "/user", userData);
+        var response = sendRequest(request);
+        return handleResponse(response, AuthData.class);
+    }
+
     private HttpRequest buildRequest(String method, String path, Object body) {
         var request = HttpRequest.newBuilder()
                 .uri(URI.create(serverUrl + path))
