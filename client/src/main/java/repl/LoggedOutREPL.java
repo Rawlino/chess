@@ -68,14 +68,14 @@ public class LoggedOutREPL {
             System.out.print(String.format("You signed in as %s.\n", user));
             return "LOGGED_IN";
         }
-        throw new DataAccessException("Expected: <yourname>");
+        throw new DataAccessException("Expected: login <username>");
     }
 
     public String help() {
         return """
                 - help: list useful commands
-                - login: login to account
-                - register: register new account
+                - login <username> <password>: login to account
+                - register <username> <password> <email>: register new account
                 - quit: close program
                 """;
     }

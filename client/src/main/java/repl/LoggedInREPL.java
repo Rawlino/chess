@@ -27,7 +27,7 @@ public class LoggedInREPL {
             try {
                 result = eval(line);
                 if (result.equals("LOGGED_OUT")) {
-                    return "LOGGED_IN";
+                    return "LOGGED_OUT";
                 } else if (result.equals("IN_GAME")) {
                     return "IN_GAME";
                 }
@@ -51,7 +51,7 @@ public class LoggedInREPL {
         String[] params = Arrays.copyOfRange(tokens, 1, tokens.length);
         return switch (cmd) {
             case "help" -> help();
-            case "logout" -> "logout selected";
+            case "logout" -> logOut();
             case "create" -> "create selected";
             case "list" -> "list selected";
             case "play" -> "play selected";
@@ -60,14 +60,31 @@ public class LoggedInREPL {
         };
     }
 
+    public String play(String... params) throws DataAccessException {
+        if (params.length >= 1) {
+            user = String.join("-", params);
+            return "LOGGED_OUT";
+        }
+        throw new DataAccessException("Expected: play <gameID> <teamColo>");
+    }
+
+    public String logOut(String... params) throws DataAccessException {
+        if (params.length >= 1) {
+            user = String.join("-", params);
+            System.out.print(String.format("Thank you %s. Have a great day\n", user));
+            return "LOGGED_OUT";
+        }
+        throw new DataAccessException("Expected: logout");
+    }
+
     public String help() {
         return """
                 - help: list useful commands
                 - logout: logout of your account
-                - create: create a new game
+                - create <gameName>: create a new game
                 - list: list available games
-                - play: enter a chessgame and play
-                - observe: watch a chessgame
+                - play <gameID> <teamColor>: enter a chessgame and play
+                - observe <gameID>: watch a chessgame
                 """;
     }
 }
