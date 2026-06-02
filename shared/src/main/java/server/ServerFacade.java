@@ -19,23 +19,32 @@ public class ServerFacade {
     }
 
     public AuthData register(UserData userData) throws DataAccessException {
-        var request = buildRequest("POST", "/user", userData);
+        var request = buildRequest("POST", "/user", userData, null);
         var response = sendRequest(request);
         return handleResponse(response, AuthData.class);
     }
 
     public AuthData login(UserData userData) throws DataAccessException {
-        var request = buildRequest("POST", "/session", userData);
+        var request = buildRequest("POST", "/session", userData, null);
         var response = sendRequest(request);
         return handleResponse(response, AuthData.class);
     }
 
-    private HttpRequest buildRequest(String method, String path, Object body) {
+    public void logout(String authToken) throws DataAccessException {
+        var request = buildRequest("DELETE", "/session", null, authToken);
+        var response = sendRequest(request);
+        handleResponse(response, null);
+    }
+
+    private HttpRequest buildRequest(String method, String path, Object body, String authToken) {
         var request = HttpRequest.newBuilder()
                 .uri(URI.create(serverUrl + path))
                 .method(method, makeRequestBody(body));
         if (body != null) {
             request.setHeader("Content-Type", "application/json");
+        }
+        if (authToken != null) {
+            request.setHeader("Authorization", authToken);
         }
         return request.build();
     }

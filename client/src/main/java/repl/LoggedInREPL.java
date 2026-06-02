@@ -70,6 +70,8 @@ public class LoggedInREPL {
 
     public String logOut(String... params) throws DataAccessException {
         if (params.length == 0) {
+            serverFacade.logout(LoggedOutREPL.authToken);
+            LoggedOutREPL.authToken = null;
             System.out.print("Thank you. Have a great day\n");
             return "LOGGED_OUT";
         }
