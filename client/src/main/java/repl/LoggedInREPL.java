@@ -1,10 +1,12 @@
 package repl;
 
+import chess.ChessGame;
 import dataaccess.DataAccessException;
 import model.GameData;
 import server.ServerFacade;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Scanner;
 
 public class LoggedInREPL {
@@ -55,7 +57,7 @@ public class LoggedInREPL {
             case "help" -> help();
             case "logout" -> logOut(params);
             case "create" -> createGame(params);
-            case "list" -> "list selected";
+            case "list" -> listGames(params);
             case "play" -> play(params);
             case "observe" -> "observe selected";
             default -> "Unknown command. To list available commands, type 'help'";
@@ -77,6 +79,19 @@ public class LoggedInREPL {
             return "LOGGED_OUT";
         }
         throw new DataAccessException("Expected: logout");
+    }
+
+    public String listGames(String... params) throws DataAccessException {
+        try {
+            if (params.length == 0) {
+                Collection<GameData> games = serverFacade.listGames(LoggedOutREPL.authToken);
+                System.out.print(games);
+                return "";
+            }
+        } catch (DataAccessException e) {
+            throw new DataAccessException("Expected: list");
+        }
+        return "";
     }
 
     public String createGame(String... params) throws DataAccessException {

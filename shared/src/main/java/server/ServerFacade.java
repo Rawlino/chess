@@ -1,14 +1,21 @@
 package server;
 
+import chess.ChessGame;
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.reflect.TypeToken;
 import dataaccess.DataAccessException;
 import model.*;
 
+import java.lang.reflect.Type;
 import java.net.*;
 import java.net.http.*;
 import java.net.http.HttpRequest.BodyPublisher;
 import java.net.http.HttpRequest.BodyPublishers;
 import java.net.http.HttpResponse.BodyHandlers;
+import java.util.Collection;
 
 public class ServerFacade {
     private final HttpClient client = HttpClient.newHttpClient();
@@ -40,6 +47,19 @@ public class ServerFacade {
         var request = buildRequest("POST", "/game", gameData, authToken);
         var response = sendRequest(request);
         return handleResponse(response, GameData.class);
+    }
+
+    public Collection<GameData> listGames(String authToken) throws DataAccessException {
+        var request = buildRequest("GET", "/game", null, authToken);
+        var response = sendRequest(request);
+        //START WORK HERE
+        String body = response.body();
+        JsonObject obj = JsonParser.parseString(body).getAsJsonObject();
+        JsonElement gamesElement = obj.get("games");
+        Type gameCollectionType = new TypeToken<Collection<GameData>>() {}.getType();
+        Collection<GameData> games =
+                new Gson().fromJson(gamesElement, gameCollectionType);
+        return games;
     }
 
     private HttpRequest buildRequest(String method, String path, Object body, String authToken) {
