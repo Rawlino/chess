@@ -82,6 +82,7 @@ public class LoggedInREPL {
                     joinData.addProperty("gameID", gameData.gameID());
                     serverFacade.joinGame(LoggedOutREPL.authToken, joinData);
                     System.out.print(String.format("Successfully joined game: %s\n", gameData.gameName()));
+                    //DRAW WHITE BOARD HERE
                 } else {
                     GameData gameData = allGames.get(gameID - 1);
                     JsonObject joinData = new JsonObject();
@@ -89,6 +90,7 @@ public class LoggedInREPL {
                     joinData.addProperty("gameID", gameData.gameID());
                     serverFacade.joinGame(LoggedOutREPL.authToken, joinData);
                     System.out.print(String.format("Successfully joined game: %s\n", gameData.gameName()));
+                    //DRAW BLACK BOARD HERE
                 }
                 return "IN_GAME";
             }
@@ -96,6 +98,17 @@ public class LoggedInREPL {
             throw new DataAccessException("Expected: play <gameID> <teamColor>");
         }
         return "";
+    }
+
+    public String observe(String... params) throws DataAccessException {
+        if (params.length == 1) {
+            int gameID = Integer.parseInt(params[0]);
+            GameData gameData = allGames.get(gameID - 1);
+            System.out.print(String.format("Now observing game: %s\n", gameData.gameName()));
+            //DRAW WHITE BOARD HERE
+            return "IN_GAME";
+        }
+        throw new DataAccessException("Expected: observe <gameID>");
     }
 
     public String logOut(String... params) throws DataAccessException {
