@@ -16,6 +16,7 @@ import static ui.EscapeSequences.*;
 public class LoggedOutREPL {
     private String user = null;
     private ServerFacade serverFacade;
+    public static String authToken = null;
 
     public LoggedOutREPL(ServerFacade sharedServerFacade) {
         serverFacade = sharedServerFacade;
@@ -70,7 +71,8 @@ public class LoggedOutREPL {
             user = params[0];
             String password = params[1];
             UserData userData = new UserData(user, password, null);
-            serverFacade.login(userData);
+            AuthData auth = serverFacade.login(userData);
+            authToken = auth.authToken();
             System.out.print(String.format("You signed in as %s.\n", user));
             return "LOGGED_IN";
         }
