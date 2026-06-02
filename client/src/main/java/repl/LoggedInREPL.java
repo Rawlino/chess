@@ -1,18 +1,21 @@
 package repl;
 
 import chess.ChessGame;
+import com.google.gson.JsonObject;
 import dataaccess.DataAccessException;
 import model.GameData;
 import server.ServerFacade;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Scanner;
 
+import static chess.ChessGame.TeamColor.WHITE;
+
 public class LoggedInREPL {
-    private String user = null;
     private ServerFacade serverFacade;
-    private Collection<GameData> allGames;
+    private ArrayList<GameData> allGames;
 
     public LoggedInREPL(ServerFacade sharedServerFacade) {
         serverFacade = sharedServerFacade;
@@ -59,17 +62,40 @@ public class LoggedInREPL {
             case "logout" -> logOut(params);
             case "create" -> createGame(params);
             case "list" -> listGames(params);
-            case "play" -> play(params);
+            case "join" -> joinGame(params);
             case "observe" -> "observe selected";
             default -> "Unknown command. To list available commands, type 'help'";
         };
     }
 
-    public String play(String... params) throws DataAccessException {
-        if (params.length == 2) {
-            return "IN_GAME";
+    public String joinGame(String... params) throws DataAccessException {
+        try {
+            if (params.length == 2) {
+                int gameID = Integer.parseInt(params[0]);
+                String teamColor = params[1];
+                if (!teamColor.equals("white") && !teamColor.equals("black")) {
+                    throw new DataAccessException("Not a valid teamColor, please choose \"white\" or \"black\"");
+                } else if (teamColor.equals("white")) {
+                    GameData gameData = allGames.get(gameID - 1);
+                    JsonObject joinData = new JsonObject();
+                    joinData.addProperty("playerColor", "WHITE");
+                    joinData.addProperty("gameID", gameData.gameID());
+                    serverFacade.joinGame(LoggedOutREPL.authToken, joinData);
+                    System.out.print(String.format("Successfully joined game: %s\n", gameData.gameName()));
+                } else {
+                    GameData gameData = allGames.get(gameID - 1);
+                    JsonObject joinData = new JsonObject();
+                    joinData.addProperty("playerColor", "BLACK");
+                    joinData.addProperty("gameID", gameData.gameID());
+                    serverFacade.joinGame(LoggedOutREPL.authToken, joinData);
+                    System.out.print(String.format("Successfully joined game: %s\n", gameData.gameName()));
+                }
+                return "IN_GAME";
+            }
+        } catch (DataAccessException e) {
+            throw new DataAccessException("Expected: play <gameID> <teamColor>");
         }
-        throw new DataAccessException("Expected: play <gameID> <teamColor>");
+        return "";
     }
 
     public String logOut(String... params) throws DataAccessException {
@@ -85,7 +111,7 @@ public class LoggedInREPL {
     public String listGames(String... params) throws DataAccessException {
         try {
             if (params.length == 0) {
-                Collection<GameData> games = serverFacade.listGames(LoggedOutREPL.authToken);
+                ArrayList<GameData> games = serverFacade.listGames(LoggedOutREPL.authToken);
                 allGames = games;
                 int i = 1;
                 for (GameData game : games) {
@@ -120,7 +146,7 @@ public class LoggedInREPL {
                 - logout: logout of your account
                 - create <gameName>: create a new game
                 - list: list all existing games
-                - play <gameID> <teamColor>: enter a chessgame and play
+                - join <gameID> <teamColor>: enter a chessgame and play
                 - observe <gameID>: watch a chessgame
                 """;
     }
