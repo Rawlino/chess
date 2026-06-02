@@ -89,7 +89,7 @@ public class LoggedOutREPL {
             System.out.print(String.format("Thank you for registering %s.\n", user));
             return "LOGGED_IN";
         }
-        throw new DataAccessException("Expected: login <username> <password> <email>");
+        throw new DataAccessException("Expected: register <username> <password> <email>");
     }
 
     public String quit(String... params) throws DataAccessException {

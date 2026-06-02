@@ -63,7 +63,7 @@ public class LoggedInREPL {
             case "create" -> createGame(params);
             case "list" -> listGames(params);
             case "join" -> joinGame(params);
-            case "observe" -> "observe selected";
+            case "observe" -> observe(params);
             default -> "Unknown command. To list available commands, type 'help'";
         };
     }
@@ -93,11 +93,12 @@ public class LoggedInREPL {
                     //DRAW BLACK BOARD HERE
                 }
                 return "IN_GAME";
+            } else {
+                throw new DataAccessException("Expected: join <gameID> <teamColor>");
             }
         } catch (DataAccessException e) {
-            throw new DataAccessException("Expected: play <gameID> <teamColor>");
+            throw new DataAccessException(e.getMessage());
         }
-        return "";
     }
 
     public String observe(String... params) throws DataAccessException {
@@ -131,11 +132,12 @@ public class LoggedInREPL {
                     System.out.print(String.format("%d. %s (Black: %s | White: %s)\n", i++, game.gameName(), game.blackUsername(), game.whiteUsername()));
                 }
                 return "";
+            } else {
+                throw new DataAccessException("Expected: list");
             }
         } catch (DataAccessException e) {
-            throw new DataAccessException("Expected: list");
+            throw new DataAccessException(e.getMessage());
         }
-        return "";
     }
 
     public String createGame(String... params) throws DataAccessException {
@@ -146,11 +148,12 @@ public class LoggedInREPL {
                 //Declared here in case we want to return the gameID as part of the response.
                 GameData gameID = serverFacade.createGame(gameData, LoggedOutREPL.authToken);
                 return String.format("The game \"%s\" was created successfully\n", gameName);
+            } else {
+                throw new DataAccessException("Expected: create <gameName>");
             }
         } catch (DataAccessException e) {
-            throw new DataAccessException("Expected: create <gameName>");
+            throw new DataAccessException(e.getMessage());
         }
-        return "";
     }
 
     public String help() {
