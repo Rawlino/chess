@@ -36,6 +36,12 @@ public class ServerFacade {
         handleResponse(response, null);
     }
 
+    public GameData createGame(GameData gameData, String authToken) throws DataAccessException {
+        var request = buildRequest("POST", "/game", gameData, authToken);
+        var response = sendRequest(request);
+        return handleResponse(response, GameData.class);
+    }
+
     private HttpRequest buildRequest(String method, String path, Object body, String authToken) {
         var request = HttpRequest.newBuilder()
                 .uri(URI.create(serverUrl + path))

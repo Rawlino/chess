@@ -1,6 +1,7 @@
 package repl;
 
 import dataaccess.DataAccessException;
+import model.GameData;
 import server.ServerFacade;
 
 import java.util.Arrays;
@@ -53,7 +54,7 @@ public class LoggedInREPL {
         return switch (cmd) {
             case "help" -> help();
             case "logout" -> logOut(params);
-            case "create" -> "create selected";
+            case "create" -> createGame(params);
             case "list" -> "list selected";
             case "play" -> play(params);
             case "observe" -> "observe selected";
@@ -76,6 +77,21 @@ public class LoggedInREPL {
             return "LOGGED_OUT";
         }
         throw new DataAccessException("Expected: logout");
+    }
+
+    public String createGame(String... params) throws DataAccessException {
+        try {
+            if (params.length == 1) {
+                String gameName = params[0];
+                GameData gameData = new GameData(0, null, null, gameName, null);
+                //Declared here in case we want to return the gameID as part of the response.
+                GameData gameID = serverFacade.createGame(gameData, LoggedOutREPL.authToken);
+                return String.format("The game \"%s\" was created successfully\n", gameName);
+            }
+        } catch (DataAccessException e) {
+            throw new DataAccessException("Expected: create <gameName>");
+        }
+        return "";
     }
 
     public String help() {
