@@ -12,6 +12,7 @@ import java.util.Scanner;
 public class LoggedInREPL {
     private String user = null;
     private ServerFacade serverFacade;
+    private Collection<GameData> allGames;
 
     public LoggedInREPL(ServerFacade sharedServerFacade) {
         serverFacade = sharedServerFacade;
@@ -85,7 +86,11 @@ public class LoggedInREPL {
         try {
             if (params.length == 0) {
                 Collection<GameData> games = serverFacade.listGames(LoggedOutREPL.authToken);
-                System.out.print(games);
+                allGames = games;
+                int i = 1;
+                for (GameData game : games) {
+                    System.out.print(String.format("%d. %s (Black: %s | White: %s)\n", i++, game.gameName(), game.blackUsername(), game.whiteUsername()));
+                }
                 return "";
             }
         } catch (DataAccessException e) {
@@ -114,7 +119,7 @@ public class LoggedInREPL {
                 - help: list useful commands
                 - logout: logout of your account
                 - create <gameName>: create a new game
-                - list: list available games
+                - list: list all existing games
                 - play <gameID> <teamColor>: enter a chessgame and play
                 - observe <gameID>: watch a chessgame
                 """;
