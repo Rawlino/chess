@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
 
+import static repl.LoggedOutREPL.extracted;
 import static ui.RenderBoard.renderBlackBoard;
 import static ui.RenderBoard.renderWhiteBoard;
 
@@ -42,10 +43,7 @@ public class LoggedInREPL {
                 }
                 System.out.print(result);
             } catch (Throwable e) {
-                Gson gson = new Gson();
-                JsonObject object = gson.fromJson(e.getMessage(), JsonObject.class);
-                String message = object.get("message").getAsString();
-                System.out.print(message);
+                extracted(e);
             }
         }
         System.out.println();

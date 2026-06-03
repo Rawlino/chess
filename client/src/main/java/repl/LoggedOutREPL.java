@@ -37,14 +37,18 @@ public class LoggedOutREPL {
                 }
                 System.out.print(result);
             } catch (Throwable e) {
-                Gson gson = new Gson();
-                JsonObject object = gson.fromJson(e.getMessage(), JsonObject.class);
-                String message = object.get("message").getAsString();
-                System.out.print(message);
+                extracted(e);
             }
         }
         System.out.println();
         return "";
+    }
+
+    public static void extracted(Throwable e) {
+        Gson gson = new Gson();
+        JsonObject object = gson.fromJson(e.getMessage(), JsonObject.class);
+        String message = object.get("message").getAsString();
+        System.out.print(message);
     }
 
     private void printPrompt() {
