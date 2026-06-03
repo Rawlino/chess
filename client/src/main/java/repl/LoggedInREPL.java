@@ -118,7 +118,7 @@ public class LoggedInREPL {
                 int gameID = Integer.parseInt(params[0]);
                 GameData gameData = allGames.get(gameID - 1);
             } catch (Exception e) {
-                throw new DataAccessException("Please enter valid int in list, not string or char");
+                return "Please enter valid int in list, not string or char";
             }
             int gameID = Integer.parseInt(params[0]);
             GameData gameData = allGames.get(gameID - 1);
