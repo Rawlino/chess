@@ -85,7 +85,8 @@ public class LoggedOutREPL {
             String password = params[1];
             String email = params[2];
             UserData userData = new UserData(user, password, email);
-            AuthData authData = serverFacade.register(userData);
+            AuthData auth = serverFacade.register(userData);
+            authToken = auth.authToken();
             System.out.print(String.format("Thank you for registering %s.\n", user));
             return "LOGGED_IN";
         }
