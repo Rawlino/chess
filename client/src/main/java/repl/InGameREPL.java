@@ -15,9 +15,6 @@ public class InGameREPL {
     }
 
     public String run() {
-        System.out.println("♕ 240 Chess Client:");
-        System.out.print(help());
-
         Scanner scanner = new Scanner(System.in);
         var result = "";
         while (!result.equals("quit")) {
