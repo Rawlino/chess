@@ -13,6 +13,7 @@ import java.util.Collection;
 import java.util.Scanner;
 
 import static chess.ChessGame.TeamColor.WHITE;
+import static ui.RenderBoard.renderBlackBoard;
 import static ui.RenderBoard.renderWhiteBoard;
 
 public class LoggedInREPL {
@@ -102,6 +103,7 @@ public class LoggedInREPL {
                     serverFacade.joinGame(LoggedOutREPL.authToken, joinData);
                     System.out.print(String.format("Successfully joined game: %s\n", gameData.gameName()));
                     //DRAW BLACK BOARD HERE
+                    renderBlackBoard();
                 }
                 return "IN_GAME";
             } else {
@@ -123,6 +125,7 @@ public class LoggedInREPL {
             GameData gameData = allGames.get(gameID - 1);
             System.out.print(String.format("Now observing game: %s\n", gameData.gameName()));
             //DRAW WHITE BOARD HERE
+            renderWhiteBoard();
             return "IN_GAME";
         }
         throw new DataAccessException("Expected: observe <gameID>");

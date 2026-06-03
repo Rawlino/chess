@@ -53,7 +53,7 @@ public class InGameREPL {
 
     public String leave(String... params) throws DataAccessException {
         if (params.length == 0) {
-            System.out.print("Thank you for watching!");
+            System.out.print("Thank you for watching!\n");
             return "LOGGED_IN";
         }
         throw new DataAccessException("Expected: leave");
