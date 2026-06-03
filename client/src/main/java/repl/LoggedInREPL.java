@@ -16,6 +16,7 @@ import static chess.ChessGame.TeamColor.WHITE;
 public class LoggedInREPL {
     private ServerFacade serverFacade;
     private ArrayList<GameData> allGames;
+    public static String playerColor;
 
     public LoggedInREPL(ServerFacade sharedServerFacade) {
         serverFacade = sharedServerFacade;
@@ -85,6 +86,7 @@ public class LoggedInREPL {
                     JsonObject joinData = new JsonObject();
                     joinData.addProperty("playerColor", "WHITE");
                     joinData.addProperty("gameID", gameData.gameID());
+                    playerColor = "WHITE";
                     serverFacade.joinGame(LoggedOutREPL.authToken, joinData);
                     System.out.print(String.format("Successfully joined game: %s\n", gameData.gameName()));
                     //DRAW WHITE BOARD HERE
@@ -93,6 +95,7 @@ public class LoggedInREPL {
                     JsonObject joinData = new JsonObject();
                     joinData.addProperty("playerColor", "BLACK");
                     joinData.addProperty("gameID", gameData.gameID());
+                    playerColor = "BLACK";
                     serverFacade.joinGame(LoggedOutREPL.authToken, joinData);
                     System.out.print(String.format("Successfully joined game: %s\n", gameData.gameName()));
                     //DRAW BLACK BOARD HERE
@@ -139,7 +142,8 @@ public class LoggedInREPL {
                 allGames = games;
                 int i = 1;
                 for (GameData game : games) {
-                    System.out.print(String.format("%d. %s (Black: %s | White: %s)\n", i++, game.gameName(), game.blackUsername(), game.whiteUsername()));
+                    System.out.print(String.format("%d. %s (Black: %s | White: %s)\n", i++, game.gameName(),
+                            game.blackUsername(), game.whiteUsername()));
                 }
                 return "";
             } else {
@@ -154,7 +158,8 @@ public class LoggedInREPL {
         try {
             if (params.length == 1) {
                 String gameName = params[0];
-                GameData gameData = new GameData(0, null, null, gameName, null);
+                GameData gameData =
+                        new GameData(0, null, null, gameName, null);
                 //Declared here in case we want to return the gameID as part of the response.
                 GameData gameID = serverFacade.createGame(gameData, LoggedOutREPL.authToken);
                 return String.format("The game \"%s\" was created successfully\n", gameName);

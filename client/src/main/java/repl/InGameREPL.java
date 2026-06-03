@@ -56,7 +56,7 @@ public class InGameREPL {
 
     public String leave(String... params) throws DataAccessException {
         if (params.length == 0) {
-            //NEED TO EDIT LEAVE TO UPDATE THE GAME BACK TO NULL FOR WHITE OR BLACK USER
+            System.out.print("Thank you for watching!");
             return "LOGGED_IN";
         }
         throw new DataAccessException("Expected: leave");
