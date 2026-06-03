@@ -73,8 +73,9 @@ public class LoggedInREPL {
             if (params.length == 2) {
                 try {
                     int gameID = Integer.parseInt(params[0]);
+                    GameData gameData = allGames.get(gameID - 1);
                 } catch (Exception e) {
-                    throw new DataAccessException("Please enter int, not string or char");
+                    throw new DataAccessException("Please enter valid int in list, not string or char");
                 }
                 int gameID = Integer.parseInt(params[0]);
                 String teamColor = params[1];
@@ -114,8 +115,9 @@ public class LoggedInREPL {
         if (params.length == 1) {
             try {
                 int gameID = Integer.parseInt(params[0]);
+                GameData gameData = allGames.get(gameID - 1);
             } catch (Exception e) {
-                throw new DataAccessException("Please enter int, not string or char");
+                throw new DataAccessException("Please enter valid int in list, not string or char");
             }
             int gameID = Integer.parseInt(params[0]);
             GameData gameData = allGames.get(gameID - 1);
