@@ -71,6 +71,11 @@ public class LoggedInREPL {
     public String joinGame(String... params) throws DataAccessException {
         try {
             if (params.length == 2) {
+                try {
+                    int gameID = Integer.parseInt(params[0]);
+                } catch (Exception e) {
+                    throw new DataAccessException("Please enter int, not string or char");
+                }
                 int gameID = Integer.parseInt(params[0]);
                 String teamColor = params[1];
                 if (!teamColor.equals("white") && !teamColor.equals("black")) {
@@ -103,6 +108,11 @@ public class LoggedInREPL {
 
     public String observe(String... params) throws DataAccessException {
         if (params.length == 1) {
+            try {
+                int gameID = Integer.parseInt(params[0]);
+            } catch (Exception e) {
+                throw new DataAccessException("Please enter int, not string or char");
+            }
             int gameID = Integer.parseInt(params[0]);
             GameData gameData = allGames.get(gameID - 1);
             System.out.print(String.format("Now observing game: %s\n", gameData.gameName()));
