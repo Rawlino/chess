@@ -1,5 +1,6 @@
 package repl;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import dataaccess.DataAccessException;
 import model.GameData;
@@ -41,8 +42,10 @@ public class LoggedInREPL {
                 }
                 System.out.print(result);
             } catch (Throwable e) {
-                var msg = e.toString();
-                System.out.print(msg);
+                Gson gson = new Gson();
+                JsonObject object = gson.fromJson(e.getMessage(), JsonObject.class);
+                String message = object.get("message").getAsString();
+                System.out.print(message);
             }
         }
         System.out.println();
@@ -75,7 +78,7 @@ public class LoggedInREPL {
                     int gameID = Integer.parseInt(params[0]);
                     GameData gameData = allGames.get(gameID - 1);
                 } catch (Exception e) {
-                    throw new DataAccessException("Please enter valid int in list, not string or char");
+                    return "Please enter valid int in list, not string or char";
                 }
                 int gameID = Integer.parseInt(params[0]);
                 String teamColor = params[1];
