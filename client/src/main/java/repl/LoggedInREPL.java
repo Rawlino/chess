@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 import dataaccess.DataAccessException;
 import model.GameData;
 import server.ServerFacade;
+import ui.RenderBoard.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -12,6 +13,7 @@ import java.util.Collection;
 import java.util.Scanner;
 
 import static chess.ChessGame.TeamColor.WHITE;
+import static ui.RenderBoard.renderWhiteBoard;
 
 public class LoggedInREPL {
     private ServerFacade serverFacade;
@@ -90,6 +92,7 @@ public class LoggedInREPL {
                     serverFacade.joinGame(LoggedOutREPL.authToken, joinData);
                     System.out.print(String.format("Successfully joined game: %s\n", gameData.gameName()));
                     //DRAW WHITE BOARD HERE
+                    renderWhiteBoard();
                 } else {
                     GameData gameData = allGames.get(gameID - 1);
                     JsonObject joinData = new JsonObject();
