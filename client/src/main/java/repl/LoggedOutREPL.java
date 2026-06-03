@@ -3,6 +3,8 @@ package repl;
 import java.util.Arrays;
 import java.util.Scanner;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import dataaccess.DataAccessException;
 import model.*;
 import server.ServerFacade;
@@ -35,8 +37,10 @@ public class LoggedOutREPL {
                 }
                 System.out.print(result);
             } catch (Throwable e) {
-                var msg = e.toString();
-                System.out.print(msg);
+                Gson gson = new Gson();
+                JsonObject object = gson.fromJson(e.getMessage(), JsonObject.class);
+                String message = object.get("message").getAsString();
+                System.out.print(message);
             }
         }
         System.out.println();
