@@ -3,15 +3,9 @@ package repl;
 import java.util.Arrays;
 import java.util.Scanner;
 
-import com.google.gson.Gson;
 import dataaccess.DataAccessException;
-import dataaccess.MySQLUserDAO;
 import model.*;
 import server.ServerFacade;
-
-import javax.xml.crypto.Data;
-
-import static ui.EscapeSequences.*;
 
 public class LoggedOutREPL {
     private String user = null;

@@ -1,18 +1,14 @@
 package repl;
 
-import chess.ChessGame;
 import com.google.gson.JsonObject;
 import dataaccess.DataAccessException;
 import model.GameData;
 import server.ServerFacade;
-import ui.RenderBoard.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Scanner;
 
-import static chess.ChessGame.TeamColor.WHITE;
 import static ui.RenderBoard.renderBlackBoard;
 import static ui.RenderBoard.renderWhiteBoard;
 

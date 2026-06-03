@@ -1,8 +1,5 @@
 package ui;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import static ui.EscapeSequences.*;
 
 public class RenderBoard {

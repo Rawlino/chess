@@ -1,6 +1,5 @@
 package client;
 
-import chess.*;
 import repl.InGameREPL;
 import repl.LoggedInREPL;
 import repl.LoggedOutREPL;

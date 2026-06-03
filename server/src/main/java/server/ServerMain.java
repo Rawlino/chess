@@ -1,8 +1,5 @@
 package server;
 
-import dataaccess.DataAccessException;
-import dataaccess.MySQLAuthDAO;
-
 public class ServerMain {
     public static void main(String[] args) {
         Server server = new Server();
