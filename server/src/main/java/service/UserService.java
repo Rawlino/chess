@@ -32,7 +32,7 @@ public class UserService {
         } else if (password.isEmpty()) {
             throw new DataAccessException("Error: bad request");
         } else if (user != null) {
-            throw new DataAccessException("Error 403: username already taken");
+            throw new DataAccessException("Error: username already taken");
         } else {
             userDAO.createUser(username, password, email);
             return authDAO.createAuth(authToken, username);
